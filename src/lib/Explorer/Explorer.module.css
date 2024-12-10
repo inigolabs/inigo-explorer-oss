@@ -1,0 +1,351 @@
+.explorer {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+
+  --layout-sidebar-width: 280px;
+  --layout-content-padding: 0px;
+}
+
+.explorer .main {
+  width: 100%;
+  height: 100%;
+  padding: var(--gutter-regular) var(--gutter-medium);
+  padding-top: var(--gutter-small);
+  display: grid;
+  gap: var(--gutter-regular);
+  grid-template-columns: 320px 1fr;
+}
+
+.explorer .main .tab {
+  width: 100%;
+  height: 100%;
+  min-width: 80px;
+  display: grid;
+  white-space: nowrap;
+  gap: var(--gutter-small);
+  grid-template-rows: auto 1fr;
+}
+
+.explorer .main .tab .current {
+  width: 100%;
+  height: 100%;
+  display: grid;
+}
+
+.explorer .main .tab .current .handle {
+  position: relative;
+  cursor: ew-resize;
+}
+
+:global(.dragging) {
+  user-select: none;
+}
+
+.explorer .main .tab .current .handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 160px;
+  border-radius: 6px;
+  background-color: var(--color-divider-primary);
+  transition: background-color var(--transition);
+}
+
+.explorer .main .tab .current .handle:hover::after, :global(.dragging) .explorer .main .tab .current .handle::after {
+  background-color: var(--color-text-primary);
+}
+
+.navigation {
+  position: relative;
+  overflow: hidden;
+  /* margin-left: calc(var(--gutter-regular) * -1);
+  margin-right: calc(var(--gutter-medium) * -1); */
+}
+
+.navigation .inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow-x: hidden;
+  /* padding-left: var(--gutter-regular);
+  padding-right: var(--gutter-medium); */
+}
+
+.navigation .inner .tabs {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* .navigation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: var(--gutter-regular);
+  height: 100%;
+  background: linear-gradient(to right, var(--color-background-secondary), transparent);
+}
+
+.navigation::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: var(--gutter-medium);
+  height: 100%;
+  background: linear-gradient(to left, var(--color-background-secondary), transparent);
+} */
+
+.navigation .tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-small);
+  height: 100%;
+  margin-right: var(--gutter-small);
+}
+
+.navigation .tabs .tab {
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  grid-template-rows: auto;
+  height: 30px;
+  gap: var(--gutter-small);
+  color: var(--color-text-secondary);
+  padding: var(--gutter-extra-small) var(--gutter-small);
+  font-size: var(--font-size-regular);
+  font-weight: var(--font-weight-regular);
+  border-radius: var(--border-radius-regular);
+  border: 1px solid var(--color-divider-primary);
+  width: fit-content;
+  max-width: 150px;
+  overflow: hidden;
+  transition:
+    color var(--transition),
+    border-color var(--transition),
+    background-color var(--transition);
+}
+
+.navigation .tabs .tab.hasCollection {
+  grid-template-columns: auto 1fr auto;
+}
+
+.navigation .tabs .tab .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navigation .tabs .compact .tab {
+  padding: var(--gutter-extra-small) 0;
+}
+
+.navigation .tabs .compact {
+  gap: var(--gutter-medium);
+}
+
+.navigation .tabs .tab:hover {
+  border: 1px solid var(--color-divider-primary);
+  background-color: var(--color-background-primary);
+}
+
+:global(.dark) .navigation .tabs .tab:hover {
+  background-color: var(--color-background-hover);
+}
+
+.navigation .tabs .tab .close {
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.navigation .tabs .tab:is(:hover, .active) .close {
+  opacity: 1;
+}
+
+.navigation .tabs .tab.active {
+  border: 1px solid var(--color-text-disabled);
+  background-color: var(--color-background-primary);
+}
+
+:global(.dark) .navigation .tabs .tab.active {
+  background-color: var(--color-background-hover);
+}
+
+.navigation .tabs .tab.disabled {
+  color: var(--color-text-disabled);
+  pointer-events: none;
+}
+
+.navigation .tabs .compact .tab:hover {
+  background-color: transparent;
+}
+
+.navigation .tabs .tab.active {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.navigation .tabs .border {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--color-text-primary);
+  transition:
+    left var(--transition),
+    width var(--transition);
+}
+
+.explorer .editor {
+  overflow: hidden;
+}
+
+.explorer .title {
+  font-size: var(--tabview-font-size, 16px);
+  line-height: var(--tabview-line-height, 32px);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.explorer .card {
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-divider-primary);
+  border-radius: var(--border-radius-regular);
+}
+
+.explorer .divider {
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-divider-primary);
+}
+
+.preflightModalContainer {
+  --modal-width: 1024px;
+  --modal-height: 100%;
+}
+
+.preflightModalContainer .editor {
+  width: 100%;
+  height: 100%;
+}
+
+.preflightModalContainer :global(.Body) {
+  display: grid !important;
+  grid-template-rows: 1fr auto !important;
+  height: 100%;
+}
+
+.preflightModalContainer :global(.ModelContent) {
+  height: 100%;
+}
+
+.preflightModalContainer .body {
+  height: 100%;
+  width: 100%;
+}
+
+.scrollContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.scrollContainer .Inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollContainer .Inner::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  height: 100%;
+  width: 32px;
+  background-color: var(--color-background-secondary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.scrollButton.Visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.scrollButton.Left {
+  left: 0;
+  padding-right: 8px;
+}
+
+.scrollButton.Right {
+  right: 0;
+  padding-left: 8px;
+}
+
+.scrollButton .Inner {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-brand-primary);
+  border-radius: 4px;
+  transition:
+    color var(--transition),
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.scrollButton .Inner:hover {
+  color: var(--color-text-badge);
+  background-color: var(--color-brand-primary);
+}
+
+.endpointModal {
+  --modal-width: 683px;
+}
+
+.endpointModalContent {
+  display: flex;
+  gap: 40px;
+}
+
+.endpointModalContent .left {
+  display: grid;
+  gap: var(--gutter-regular);
+}
+
+.endpointModalContent .left .text {
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.collectionsOption {
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-small);
+}

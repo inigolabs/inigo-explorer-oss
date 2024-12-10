@@ -1,0 +1,122 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.wrapper.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wrapper.checked {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.checkbox {
+  position: relative;
+  width: var(--checkbox-size, 16px);
+  height: var(--checkbox-size, 16px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--checkbox-border-radius, var(--border-radius-regular));
+  border: 1px solid var(--checkbox-inactive-color, var(--color-text-secondary));
+  background-color: var(--color-background-secondary);
+  margin: var(--checkbox-margin, 0 8px 0 0);
+}
+
+.checkbox .placeholder {
+  color: var(--checkbox-inactive-color, var(--color-accent));
+  pointer-events: none;
+}
+
+:global(.dark) .checkbox {
+  background-color: var(--color-background-menu);
+}
+
+.wrapper.switch .checkbox {
+  width: 32px;
+  height: 16px;
+  border: none;
+  background-color: transparent;
+  border-radius: 0px;
+}
+
+.checkbox input {
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.wrapper.disabled input {
+  cursor: not-allowed;
+}
+
+.checkbox .overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  z-index: 1;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  color: var(--color-text-button);
+  background-color: var(--color-accent);
+  border-radius: var(--checkbox-border-radius, var(--border-radius-regular));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.checkbox input:checked + .overlay {
+  opacity: 1;
+}
+
+.checkbox .switch {
+  width: 100%;
+  height: 8px;
+  border-radius: 8px;
+  background-color: var(--color-text-disabled);
+  transition: background-color var(--transition);
+}
+
+.checkbox .switch .handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0px;
+  top: calc(50% - 8px);
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-background-primary);
+  border: 2px solid var(--color-text-disabled);
+  border-radius: 16px;
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
+}
+
+.checkbox input:checked + .switch {
+  background-color: var(--color-accent);
+}
+
+.checkbox input:checked + .switch .handle {
+  border-color: var(--color-accent);
+  transform: translateX(100%);
+}

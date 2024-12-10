@@ -1,0 +1,222 @@
+@use '../../styles/variables/variables.scss';
+
+.Button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px var(--gutter-regular);
+  height: 32px;
+  min-height: 32px;
+  white-space: nowrap;
+  user-select: none;
+  background: var(--color-accent);
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  font-weight: 400;
+
+  color: var(--color-text-button);
+  font-size: 14px;
+  line-height: 22px;
+
+  transition: background variables.$transition, border-color variables.$transition;
+
+  &:not(.disabled) {
+    cursor: pointer;
+  }
+
+  &.primary:hover {
+    background: var(--color-accent-hover);
+  }
+
+  &.secondary:active {
+    border-color: var(--color-accent);
+    background: transparent;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
+  .ButtonIcon {
+    margin-right: var(--gutter-small);
+  }
+
+  .ButtonIcon.Right {
+    margin-right: 0px;
+    margin-left: var(--gutter-small);
+  }
+
+  &.IconOnly {
+    padding: 0px;
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    min-height: 32px;
+
+    .ButtonIcon {
+      margin-right: 0px;
+    }
+
+    .ButtonIcon.Right {
+      margin-right: 0px;
+      margin-left: 0px;
+    }
+  }
+
+  &.secondary {
+    border: 1px solid var(--color-accent);
+    background: transparent;
+    color: var(--color-accent);
+
+    &.disabled {
+      color: var(--color-accent-disabled);
+      border-color: var(--color-accent-disabled);
+    }
+
+    &:hover {
+      color: var(--color-accent-hover)
+    }
+  }
+
+  &.Ternary {
+    border: none;
+    background: transparent;
+    color: var(--color-accent);
+    height: 32px;
+  }
+
+  &.link {
+    color: var(--color-accent);
+    background: none;
+    padding: 0px;
+    min-width: auto;
+    height: 30px;
+    min-height: 30px;
+    transition: color var(--transition);
+
+    .ButtonIcon {
+      margin-right: var(--gutter-small);
+    }
+
+    .ButtonIcon.Right {
+      margin-right: 0px;
+      margin-left: var(--gutter-small);
+    }
+
+    &:focus,
+    &:hover {
+      color: var(--color-accent-hover);
+    }
+
+    &.disabled {
+      color: var(--color-accent-disabled);
+    }
+  }
+
+  &.text {
+    color: var(--color-text-primary);
+    background: none;
+    padding: 0px;
+    min-width: auto;
+    height: 30px;
+    min-height: 30px;
+
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.ghost {
+    color: var(--color-accent);
+    background: none;
+    padding: 0px 16px;
+    min-width: auto;
+    height: 30px;
+    min-height: 30px;
+    background-color: var(--color-background-secondary);
+    transition: color var(--transition), background-color var(--transition);
+
+    .ButtonIcon {
+      margin-right: 4px;
+    }
+
+    .ButtonIcon.Right {
+      margin-right: 0px;
+      margin-left: 4px;
+    }
+
+    &:focus,
+    &:hover {
+      color: var(--color-accent-hover);
+      background-color: var(--color-background-ghost-hover);
+    }
+
+    &.disabled {
+      color: var(--color-accent-disabled);
+      background: var(--color-background-secondary);
+    }
+  }
+
+  &.border {
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-divider-primary);
+    background: none;
+    transition: border-color var(--transition);
+
+    &:focus, &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  &.Loading {
+    cursor: auto;
+
+    .ButtonIcon {
+      .ButtonLoader {
+        width: 16px;
+        height: 16px;
+        background-image: url('/assets/images/spinner_dark.png');
+        background-size: 16px 16px;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+.dark {
+  .Button {
+    &.text {
+      color: var(--color-text-secondary);
+    }
+
+    &.ghost {
+      background-color: var(--color-background-tertiary);
+
+      &:hover {
+        background-color: var(--color-background-ghost-hover);
+      }
+    }
+
+    &.border {
+      .ButtonLoader {
+        width: 16px;
+        height: 16px;
+        background-image: url('/assets/images/spinner_light.png');
+        background-size: 16px 16px;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(359deg);
+  }
+}

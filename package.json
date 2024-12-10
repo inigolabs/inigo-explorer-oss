@@ -1,0 +1,71 @@
+{
+  "name": "graphql-explorer",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "A GraphQL Explorer for your API",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./styles": {
+      "types": "./dist/graphql-explorer.css.d.ts",
+      "default": "./dist/graphql-explorer.css"
+    }
+  },
+  "files": [
+    "/dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:lib": "tsc -b && vite build --config vite-lib.config.ts",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.11.10",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.1.10",
+    "@mui/material": "^6.1.10",
+    "@types/lodash": "^4.17.13",
+    "classname": "^0.0.0",
+    "classnames": "^2.5.1",
+    "graphql": "^16.9.0",
+    "graphql-ws": "^5.16.0",
+    "lodash": "^4.17.21",
+    "lottie-react": "^2.4.0",
+    "moment": "^2.30.1",
+    "monaco-editor": "0.51.0",
+    "monaco-graphql": "^1.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-transition-group": "^4.4.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "ajv": "^8.17.1",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.12.0",
+    "sass-embedded": "^1.82.0",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.15.0",
+    "vite": "^6.0.1",
+    "vite-plugin-dts": "^4.4.0",
+    "vite-plugin-static-copy": "^2.2.0"
+  }
+}

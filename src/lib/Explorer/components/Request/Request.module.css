@@ -1,0 +1,140 @@
+.request {
+  position: relative;
+  display: grid;
+  /* grid-template-rows: 1fr minmax(1fr, 300px); */
+  /* overflow: hidden; */
+  width: 100%;
+
+  --checkbox-margin: 0 calc(var(--gutter-small) * -1) 0 0;
+}
+
+:global(.dragging) {
+  user-select: none;
+}
+
+.request .handle {
+  position: relative;
+  cursor: ns-resize;
+}
+
+.request .handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  height: 6px;
+  border-radius: 6px;
+  background-color: var(--color-divider-primary);
+  transition: background-color var(--transition);
+}
+
+.request .handle:hover::after,
+:global(.dragging) .request .handle::after {
+  background-color: var(--color-text-primary);
+}
+
+.card {
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-divider-primary);
+  border-radius: var(--border-radius-regular);
+}
+
+.editor {
+  width: 100%;
+  border: 1px solid var(--color-divider-primary);
+}
+
+.title {
+  font-size: var(--tabview-font-size, 16px);
+  line-height: var(--tabview-line-height, 32px);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.divider {
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-divider-primary);
+}
+
+.request :is(.query, .other) {
+  padding: var(--gutter-regular);
+  padding-top: var(--gutter-small);
+  width: 100%;
+  /* overflow: hidden; */
+}
+
+.request .globalActions {
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-regular);
+}
+
+.request .query {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.request .query .toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-regular);
+  width: 100%;
+  overflow: hidden;
+}
+
+.request .query .toolbar .title {
+  margin-right: auto;
+}
+
+.request .query .toolbar .count {
+  width: 80px;
+}
+
+.request .run {
+  display: flex;
+}
+
+.request .run .main {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-right: 1px;
+}
+
+.request .run .more {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.request .copy {
+  display: flex;
+}
+
+.request .copy .main {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-right: -1px;
+}
+
+.request .copy .more {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.request .save {
+  display: flex;
+}
+
+.request .save .main {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-right: -1px;
+}
+
+.request .save .more {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}

@@ -1,0 +1,142 @@
+.TabContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.TabViewContainer {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: 100%;
+  height: 100%;
+}
+
+.TabViewContainer .Navigation {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: var(--tabview-navigation-gap, 16px);
+  overflow: hidden;
+  width: 100%;
+  padding-top: var(--tabview-navigation-padding-top);
+  padding-left: var(--tabview-navigation-padding-left);
+  padding-right: var(--tabview-navigation-padding-right);
+  padding-bottom: var(--tabview-navigation-padding-bottom);
+}
+
+.TabViewContainer .Navigation::after {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  bottom: 0px;
+  width: calc(100% - var(--tabview-navigation-padding-left, 0px) - var(--tabview-navigation-padding-right, 0px));
+  height: 1px;
+  background-color: var(--color-divider-primary);
+}
+
+.TabViewContainer .Navigation.DisableBorder {
+  border-bottom: none;
+}
+
+.TabViewContainer .Navigation .Button {
+  position: relative;
+  cursor: pointer;
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: var(--tabview-font-size, 16px);
+  font-weight: 400;
+  line-height: var(--tabview-line-height, 24px);
+  padding-bottom: var(--tabview-padding-bottom, 4px);
+  border-bottom: 2px solid transparent;
+  transition:
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.TabViewContainer .Navigation .Button:disabled {
+  pointer-events: none;
+  color: var(--color-text-disabled);
+}
+
+.TabViewContainer .Navigation .Button:disabled > * {
+  color: var(--color-text-disabled) !important;
+}
+
+.TabViewContainer .Navigation .Button:hover {
+  color: var(--color-text-primary);
+}
+
+.TabViewContainer .Navigation .Button .Text {
+  position: absolute;
+  color: var(--color-text-secondary);
+}
+
+.TabViewContainer .Navigation .Button .TextActive {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.TabViewContainer .Navigation .Button .Text {
+  opacity: 1;
+}
+
+.TabViewContainer .Navigation .Button .TextActive {
+  opacity: 0;
+}
+
+.TabViewContainer .Navigation:not(.HasOneTab) .Button.Active {
+  border-color: var(--color-text-primary);
+}
+
+.TabViewContainer .Navigation .Button.Active .Text {
+  opacity: 0;
+}
+
+.TabViewContainer .Navigation .Button.Active .TextActive {
+  opacity: 1;
+}
+
+.TabViewContainer .Navigation.Disabled .Button {
+  border-bottom-color: transparent !important;
+}
+
+.TabViewContainer .Navigation.Disabled .Button.Active .Text {
+  opacity: 1 !important;
+}
+
+.TabViewContainer .Navigation.Disabled .Button.Active .TextActive {
+  opacity: 0 !important;
+}
+
+.TabViewContainer .Actions {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.TabViewContainer .Actions::before {
+  content: '';
+  height: 22px;
+  border-left: 1px solid var(--color-divider-primary);
+  margin-right: var(--gutter-regular);
+}
+
+.TabViewContainer .Actions.Right {
+  justify-content: flex-end;
+}
+
+.TabViewContainer .Actions:is(.Right, .DisableDivider)::before {
+  display: none;
+}
+
+.TabViewContainer .Content {
+  flex: 1;
+  padding-top: var(--tabview-content-padding-top, 16px);
+  overflow: hidden;
+}

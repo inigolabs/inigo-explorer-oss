@@ -1,0 +1,91 @@
+.DateRange {
+  display: flex;
+  flex-direction: column;
+
+  .Inputs {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    &>* {
+      width: 125px;
+      border: 1px solid var(--color-divider-primary) !important;
+    }
+  }
+
+  .Calendars {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 16px;
+  }
+
+  .TimePickers {
+    display: flex;
+    gap: 32px;
+
+    &>div {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.TimeInput {
+  display: flex;
+  gap: 16px;
+
+  &:focus-within {
+    border-color: transparent;
+  }
+
+  .Hours,
+  .Minutes {
+    display: flex;
+    width: 80px;
+    height: 34px;
+    gap: 8px;
+    padding: 0 16px;
+    border: 1px solid var(--color-divider-primary);
+    border-radius: 4px;
+
+    input {
+      display: block;
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 12px;
+      height: 100%;
+      min-width: 0px;
+      color: var(--color-text-secondary);
+    }
+
+    .Arrows {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        background: none;
+        border: none;
+        outline: none;
+        width: 12px;
+        height: 12px;
+        overflow: hidden;
+        color: var(--color-text-secondary);
+      }
+    }
+  }
+}

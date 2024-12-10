@@ -1,0 +1,163 @@
+@use '../../styles/variables/variables.scss';
+
+.Select {
+  position: relative;
+  height: fit-content;
+
+  .Error {
+    font-size: 14px;
+    line-height: 22px;
+    height: 22px;
+    color: #ff8080;
+    margin-top: 4px;
+  }
+
+  .HasError {
+    border-color: #ff8080;
+  }
+
+  .InputContainer {
+    max-width: 100%;
+  }
+
+  .FormLabel {
+    &~.Options {
+      top: calc(44px + 18px);
+    }
+  }
+
+  .SelectClear {
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+  }
+
+  .Input {
+    width: 100%;
+    gap: 16px;
+    cursor: pointer;
+    background-color: var(--text-input-background-color, var(--color-background-secondary));
+
+    .Field {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: var(--text-input-font-size, 14px);
+      line-height: 18px;
+
+      &.Placeholder {
+        font-weight: 400;
+        color: #9e9e9e !important;
+      }
+    }
+
+    &:focus-within {
+      border-color: var(--color-brand-primary);
+    }
+    
+    &:hover {
+      border-color: var(--color-brand-primary);
+    }
+  }
+
+  &.Alternate {
+    .Input {
+      background: none;
+      border: 1px solid var(--color-divider-primary);
+
+      .Field {}
+    }
+  }
+
+  .Options {
+    position: fixed;
+    z-index: 10000;
+    width: 100%;
+    max-height: 245px;
+    overflow-y: auto;
+    pointer-events: none;
+    opacity: 0;
+    background-color: var(--color-background-primary);
+    border: 0.5px solid var(--color-divider-primary);
+    box-shadow: var(--shadow-medium);
+    border-radius: 4px;
+    transform: translateY(10px);
+    transition: opacity variables.$transition, transform variables.$transition;
+
+    .SelectOption {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      height: 38px;
+      padding: 0 var(--gutter-small);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--color-text-secondary);
+      transition: background variables.$transition;
+
+      &:hover {
+        background: var(--color-background-secondary);
+      }
+
+      &[hidden] {
+        display: none;
+      }
+    }
+  }
+
+  &.Active {
+    .Options {
+      opacity: 1;
+      transform: none;
+      pointer-events: all;
+
+      &.top {
+        transform: translateY(32px) !important;
+      }
+    }
+
+  }
+
+  &.Disabled {
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+  }
+}
+
+.dark .Select {
+  .Options {
+    background-color: var(--color-background-menu);
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.60);
+
+    .SelectOption {
+      &:hover {
+        background-color: var(--color-background-tertiary);
+      }
+    }
+  }
+}
+
+.dark .Select .Input:focus-within {
+  border-color: var(--color-brand-secondary);
+}
+
+.Select.Compact {
+  .Input {
+    height: 26px;
+    gap: 8px;
+    background-color: transparent;
+    
+    .Field {
+      font-weight: 400;
+      padding-left: 8px;
+    }
+
+    .Suffix {
+      padding-right: 8px;
+    }
+  }
+}

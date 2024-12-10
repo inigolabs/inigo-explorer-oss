@@ -1,0 +1,24 @@
+.options {
+  width: 100%;
+}
+
+.option {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 var(--gutter-small);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-text-secondary);
+  transition: background var(--transition);
+}
+
+.option:hover {
+  background: var(--color-background-secondary);
+}
+
+:global(.dark) .option:hover {
+  background-color: var(--color-background-tertiary);
+}

@@ -1,0 +1,70 @@
+@use "fonts.scss";
+@use "colors.scss";
+
+$easing: cubic-bezier(0.23, 1, 0.32, 1);
+$transition: 300ms $easing;
+$columnSize: 207px;
+$columnGap: 43px;
+
+@mixin Pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 26px;
+  font-size: 12px;
+  line-height: 18px;
+  border-radius: 4px;
+}
+
+@mixin ProgressBarWrapper {
+  display: flex;
+  align-items: center;
+
+  .BarWrapper {
+    display: flex;
+    gap: 1px;
+    width: 50px;
+    min-width: 50px;
+    height: 4px;
+    background: var(--progress-bar-background, var(--color-divider-primary));
+    border-radius: 1px;
+    overflow: hidden;
+
+    .ProgressBar {
+      display: flex;
+    }
+  }
+
+  .Label,
+  .Percentage {
+    font-size: 14px;
+    line-height: 22px;
+    margin: 0 0 0 16px;
+    white-space: nowrap;
+  }
+
+  .Label {
+    flex: 1;
+  }
+}
+
+@mixin truncate {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@mixin scrollBar {
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #84ACF3;
+    border-radius: 6px 10px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    background-clip: content-box;
+  }
+}

@@ -1,0 +1,297 @@
+@use '../../styles/variables/variables.scss';
+
+.Menu:not(.Date) {
+  .MenuOptionWrapper {
+    max-height: 288px;
+    overflow: auto;
+  }
+}
+
+.Menu {
+  position: relative;
+
+  &.ShouldNotRenderSearchResult {
+    // .SearchValue {
+    //   background: none;
+    //   font-weight: 400;
+    // }
+  }
+
+  .MenuOptionWrapper {
+    position: relative;
+  }
+
+  &.autoComplete {
+    .MenuOptionWrapper {
+      min-width: 300px;
+    }
+  }
+
+  .Options {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    overflow-y: auto;
+    pointer-events: none;
+    opacity: 0;
+    margin: 0;
+    transform: translateY(10px);
+    background-color: var(--color-background-primary);
+    border: 1px solid var(--color-divider-primary);
+    box-shadow: var(--shadow-medium);
+    border-radius: 4px;
+    transition: opacity variables.$transition, transform variables.$transition;
+
+    .MenuSearch {
+      padding: 8px 16px;
+    }
+
+    .Clear {
+      display: flex;
+      border-top: 1px solid var(--color-divider-primary);
+      height: 62px;
+      padding: 16px 24px 24px 24px;
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--color-accent);
+      cursor: pointer;
+
+      &.ClearDisabled {
+        pointer-events: none;
+        color: #84acf3;
+      }
+    }
+
+    .OptionsContent {
+      display: flex;
+
+      .OptionsList {
+        padding: 8px 0;
+        width: 100%;
+
+        .OptionsListDivider {
+          margin: 8px 0;
+          width: 100%;
+          height: 1px;
+          background-color: var(--color-divider-primary);
+        }
+      }
+
+      .OptionsCustom {
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        border-left: 1px solid var(--color-divider-primary);
+      }
+    }
+
+    .OptionsFooter {
+      display: flex;
+      align-items: center;
+      border-top: 1px solid var(--color-divider-primary);
+      padding: 16px;
+
+      .OptionsFooterActions {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        gap: 24px;
+      }
+    }
+
+    .MenuOption {
+      display: flex;
+      align-items: center;
+      padding: 8px var(--menu-option-padding-horizontal, var(--gutter-small));
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+      transition: background variables.$transition, color variables.$transition;
+
+      &.IsButton+.MenuOption:not(.IsButton) {
+        border-top: 1px solid var(--color-divider-primary);
+      }
+
+      .Checkbox {
+        position: relative;
+        width: 16px;
+        height: 16px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--border-radius-regular);
+        border: 1px solid var(--color-text-secondary);
+        background-color: var(--color-background-secondary);
+        margin: 0 8px 0 0;
+
+        &.disabled {
+          pointer-events: none;
+        }
+
+        &.checked {
+          background: var(--color-accent);
+          border: 1px solid var(--color-accent);
+        }
+
+        .Icon {
+          position: absolute;
+          color: var(--color-text-button);
+        }
+
+        input {
+          margin: 0;
+          cursor: pointer;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+        }
+      }
+
+      &:not(.ReadOnly):hover {
+        cursor: pointer;
+        color: var(--color-text-primary);
+        background-color: var(--color-background-secondary);
+      }
+
+      &[hidden] {
+        display: none;
+      }
+
+      &.MenuOptionActive {
+        color: var(--color-accent);
+      }
+
+      &.ReadOnly {
+        color: var(--color-text-disabled);
+      }
+
+      &.Disabled {
+        pointer-events: none;
+        color: var(--color-text-disabled);
+      }
+
+      &.Selected {
+        color: var(--color-text-primary);
+        font-weight: 500;
+      }
+    }
+  }
+
+  &.right {
+    .Options {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  &:not(.hover):focus,
+  &:not(.hover):focus-within {
+    & > .Options:not(.disabled) {
+      opacity: 1;
+      z-index: 100000;
+      transform: none;
+      pointer-events: all;
+      transition: opacity variables.$transition, transform variables.$transition;
+
+      .OptionsContent {
+        display: flex;
+      }
+    }
+  }
+
+  &.hover {
+    .Options {
+      transition: opacity variables.$transition, transform variables.$transition;
+    }
+  }
+
+  &.hover {
+    .Options {
+      transition: none;
+    }
+
+    &.visible {
+      .Options {
+        opacity: 1;
+        z-index: 100000;
+        transform: none;
+        pointer-events: all;
+        transition: opacity variables.$transition, transform variables.$transition;
+
+        .OptionsContent {
+          display: flex;
+        }
+      }
+    }
+  }
+
+  &.Disabled {
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+  }
+}
+
+.MenuOptionWrapperEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background-color: var(--color-background-primary);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-text-primary);
+}
+
+.MenuFooter {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-divider-primary);
+}
+
+.Menu {
+  .Menu {
+    border-top: 1px solid var(--color-divider-primary);
+  }
+}
+
+.Menu.Date {
+  .Options {
+    .MenuOption {
+      padding: 8px 16px;
+    }
+  }
+}
+
+.dark .Menu {
+  .Options {
+    background-color: var(--color-background-menu);
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.60);
+
+    .MenuOption {
+      &:hover {
+        background-color: var(--color-background-tertiary);
+      }
+
+      .Checkbox {
+        background-color: var(--color-background-menu);
+        
+        &.checked {
+          background-color: var(--color-accent);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,140 @@
+@use '../../styles/variables/variables.scss';
+
+.ModalWrapper {
+  display: flex;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  padding: var(--gutter-regular);
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: variables.$transition;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  &.Visible {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 50000;
+  }
+
+  .Container {
+    margin: auto;
+    width: var(--modal-width, 568px);
+    max-width: calc(100% - var(--gutter-regular) * 2);
+    height: var(--modal-height, auto);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+    background-color: var(--color-background-primary);
+    border: 1px solid var(--color-divider-primary);
+    box-shadow: var(--shadow-regular);
+    border-radius: 4px;
+
+    .BorderTop {
+      position: absolute;
+      left: -1px;
+      top: -1px;
+      width: calc(100% + 2px);
+      height: 8px;
+      border-radius: 4px 4px 0px 0px;
+    }
+
+    .Close {
+      display: flex;
+      color: var(--color-text-secondary);
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    .Title {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gutter-small);
+      font-size: 24px;
+      line-height: 36px;
+      color: var(--color-text-primary);
+      width: 100%;
+      margin: 0 0 24px 0;
+      cursor: default;
+
+      .Description {
+        margin-top: 6px;
+        font-size: var(--font-size-regular);
+        line-height: 22px;
+        color: var(--color-text-secondary);
+      }
+    }
+
+    .Body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+      border-radius: 4px;
+      flex-direction: column;
+
+      .ModelContent {
+        display: flex;
+        width: 100%;
+      }
+
+      .ButtonWrapper {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        margin: 24px 0 0 0;
+        gap: var(--gutter-regular);
+
+        .Button {
+          height: 38px;
+          font-size: 14px;
+          line-height: 22px;
+          padding: 8px 32px;
+
+          &.Disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+
+  &.FullWidthContent {
+    .Container {
+      align-items: flex-start;
+    }
+
+    .Body {
+      overflow: visible;
+      border-radius: 0px;
+
+      .ModelContent {
+        margin-left: -40px;
+        width: calc(100% + 80px);
+        overflow: visible;
+      }
+    }
+  }
+
+    &.FullContent {
+      .Container {
+        padding: 0;
+        overflow: hidden;
+
+        .Body {
+          overflow: hidden;
+        }
+      }
+    }
+}

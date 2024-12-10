@@ -1,0 +1,142 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100001;
+  padding: 46px;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.wrapper.guest {
+  width: 100%;
+  max-width: 600px;
+}
+
+.container {
+  position: relative;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 50%;
+  pointer-events: all;
+  min-width: 250px;
+  padding: 8px;
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--accent-border-color);
+  background-color: var(--accent-background-color);
+  border-left: 8px solid var(--accent-color);
+  border-radius: 4px;
+  box-shadow: var(--shadow-regular);
+  animation: message 400ms ease;
+  transition: top 400ms ease;
+  transform: translateX(-50%);
+}
+
+.message.success {
+  --accent-color: #42b883;
+  --accent-background-color: #e0f5ec;
+  --accent-border-color: #98debf;
+}
+
+.message.error {
+  --accent-color: #ff6b6b;
+  --accent-background-color: #ffe1e1;
+  --accent-border-color: #ffb5b5;
+}
+
+:global(.dark) .message {
+  box-shadow: var(--shadow-regular);
+}
+
+:global(.dark) .message.success {
+  --accent-color: #50a982;
+  --accent-background-color: #204434;
+  --accent-border-color: #98debf;
+}
+
+:global(.dark) .message.error {
+  --accent-color: #d47575;
+  --accent-background-color: #552f2f;
+  --accent-border-color: #ffb5b5;
+}
+
+.message .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-text-button);
+  background-color: var(--accent-color);
+  border-radius: 100%;
+}
+
+.message .title {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  margin-right: 8px;
+}
+
+.message .text {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+:global(.dark) .message .text {
+  color: var(--color-text-primary);
+}
+
+.message .text::first-letter {
+  text-transform: uppercase;
+}
+
+.message .action {
+  margin-right: 8px;
+}
+
+.message .close {
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.message:hover .close {
+  opacity: 1;
+}
+
+.messageEnter {
+  opacity: 0;
+  transform: translateY(-100%) translateX(-50%);
+}
+
+.messageEnterActive {
+  opacity: 1;
+  transform: translateX(-50%);
+  transition: top 400ms ease, opacity 400ms ease, transform 400ms ease;
+}
+
+.messageExit {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+.messageExitActive {
+  opacity: 0;
+  transform: translateY(-100%) translateX(-50%);
+  transition: top 400ms ease, opacity 400ms ease, transform 400ms ease;
+}

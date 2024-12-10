@@ -1,0 +1,9 @@
+src
+node_modules
+.gitignore
+eslint.config.js
+package-lock.json
+tsconfig.json
+tsconfig.build.json
+tsconfig.app.json
+vite.config.js

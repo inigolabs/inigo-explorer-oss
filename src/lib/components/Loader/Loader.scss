@@ -1,0 +1,35 @@
+@use '../../styles/variables/variables.scss';
+
+.Loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  text-align: center;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  max-height: 100vh;
+  height: 100%;
+  z-index: 500;
+  background-color: var(--loader-background-color, var(--color-background-primary));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity variables.$transition;
+
+  &.Visible {
+    opacity: 1;
+    pointer-events: all;
+    transition: none;
+  }
+
+  div {
+    width: 144px;
+  }
+
+  span {
+    white-space: pre-line;
+    line-height: 22px;
+  }
+}

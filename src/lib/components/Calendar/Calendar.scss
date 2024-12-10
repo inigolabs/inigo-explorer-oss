@@ -1,0 +1,216 @@
+@use '../../styles/variables/variables.scss';
+
+.CalendarContainer {
+  display: flex;
+  gap: 32px;
+}
+
+.Calendar {
+  .Head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+    .Navigation {
+      display: flex;
+      gap: 8px;
+
+      .NavigationButton {
+        display: block;
+        margin: 0;
+        padding: 0;
+        background: none;
+        border: none;
+        outline: none;
+        color: var(--color-text-secondary);
+
+        &:not([data-disabled='true']) {
+          cursor: pointer;
+        }
+
+        &[data-disabled='true'] {
+          color: var(--color-text-disabled);
+        }
+      }
+    }
+
+    .MonthAndYear {
+      color: var(--color-text-secondary);
+      font-size: 14px;
+      line-height: 22px;
+      text-transform: uppercase;
+    }
+  }
+
+  .Grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-row-gap: 4px;
+
+    .Item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+
+      &.Placeholder {
+        pointer-events: none !important;
+      }
+    }
+
+    &.Weekdays {
+      margin-bottom: 8px;
+      color: var(--color-text-secondary);
+      font-size: 10px;
+
+      .Item {
+        height: 28px;
+      }
+    }
+
+    &.Days {
+      grid-template-rows: repeat(5, 1fr);
+
+      .Item {
+        display: block;
+        margin: 0;
+        padding: 0;
+        background: none;
+        border: none;
+        outline: none;
+        color: var(--color-text-secondary);
+        font-size: 12px;
+
+        &:last-child:not(.LastInRange):not(.FirstInRange),
+        &:nth-child(7n):not(.LastInRange):not(.FirstInRange) {
+          border-top-right-radius: var(--border-radius-regular);
+          border-bottom-right-radius: var(--border-radius-regular);
+        }
+
+        &.First:not(.FirstInRange):not(.LastInRange),
+        &:nth-child(7n + 1):not(.FirstInRange):not(.LastInRange) {
+          border-top-left-radius: var(--border-radius-regular);
+          border-bottom-left-radius: var(--border-radius-regular);
+        }
+
+        &.InRange {
+          background-color: var(--color-background-secondary);
+        }
+
+        &.Hover {
+          background-color: var(--color-background-secondary);
+        }
+
+        .Circle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          border-radius: var(--border-radius-regular);
+          transition: color variables.$transition, background-color variables.$transition;
+
+          .Day {
+            position: relative;
+
+            &.Today {
+              color: var(--color-text-primary);
+              font-weight: 500;
+
+              &::after {
+                content: '';
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                top: 1;
+                right: -4;
+                opacity: 1;
+                background-color: var(--color-text-primary);
+                border-radius: var(--border-radius-regular);
+                transition: opacity variables.$transition;
+              }
+            }
+          }
+        }
+
+        &:hover {
+          border-radius: var(--border-radius-regular);
+
+          .Circle {
+            background-color: var(--color-background-primary);
+            border: 1px solid var(--color-brand-primary);
+            border-radius: var(--border-radius-regular);
+
+            .Day {
+              font-weight: 500;
+            }
+          }
+        }
+
+        &.Selected {
+          border-radius: var(--border-radius-regular);
+
+          .Circle {
+            background-color: var(--color-brand-primary);
+            border-radius: var(--border-radius-regular);
+
+            .Day {
+              color: #ffffff;
+              font-weight: 500;
+
+              &.Today {
+                &::after {
+                  background-color: #ffffff;
+                  opacity: 1;
+                }
+              }
+            }
+          }
+        }
+
+        &:not([data-disabled='true']) {
+          cursor: pointer;
+        }
+
+        &[data-disabled='true'] {
+          pointer-events: none;
+          color: var(--color-text-disabled);
+        }
+      }
+    }
+  }
+}
+
+.Range {
+  .Calendar:first-child {
+    .Head {
+      .Navigation {
+        .NavigationButton {
+
+          &.Next,
+          &.Last {
+            opacity: 0;
+            pointer-events: none;
+          }
+        }
+      }
+    }
+  }
+
+  .Calendar:last-child {
+    .Head {
+      .Navigation {
+        .NavigationButton {
+
+          &.Previous,
+          &.First {
+            opacity: 0;
+            pointer-events: none;
+          }
+        }
+      }
+    }
+  }
+}

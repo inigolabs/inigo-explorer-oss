@@ -1,0 +1,195 @@
+.container {
+  cursor: var(--text-input-cursor, text);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-text-secondary)
+}
+
+.error {
+  font-size: 14px;
+  line-height: 22px;
+  height: 22px;
+  color: #ff8080;
+}
+
+.error::first-letter {
+  text-transform: uppercase;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--text-input-height, 32px);
+  padding: 0 15px;
+  gap: 8px;
+  border: 1px solid var(--color-divider-primary);
+  background-color: var(--text-input-background-color, var(--color-background-secondary));
+  border-radius: 4px;
+  transition: border var(--transition);
+}
+
+.field button {
+  position: absolute;
+  right: 8px;
+  padding: 0;
+  margin: 0;
+  width: 12px;
+  height: 12px;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color var(--transition), background-color var(--transition);
+  border-radius: 1px;
+}
+
+.field button:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-divider-primary);
+}
+
+.field button.up {
+  bottom: 14px;
+}
+
+.field button.down {
+  bottom: 3px;
+}
+
+.field input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.field input,
+.field textarea {
+  font-size: var(--text-input-font-size, 14px);
+  line-height: 18px;
+  color: var(--color-text-primary) !important;
+}
+
+.multiline .field {
+  padding: 0;
+  border-radius: 4px;
+  height: auto;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.field:focus {
+  border-color: var(--color-brand-primary);
+}
+
+:global(.dark) .field:focus-within {
+  border-color: var(--color-brand-secondary);
+}
+
+.field:hover {
+  border-color: var(--color-brand-primary);
+}
+
+.passwordToggle {
+  cursor: pointer;
+}
+
+.prefix,
+.suffix {
+  color: var(--color-text-secondary);
+  transition: color var(--transition);
+}
+
+/* .field:hover .prefix, .field:hover .suffix,
+.field:focus-within .prefix, .field:focus-within .suffix {
+  color: var(--color-text-accent);
+} */
+
+/* .divider {
+  height: var(--gutter-regular);
+  width: 1px;
+  border-radius: 4px;
+  background-color: var(--color-border-secondary);
+} */
+
+.input {
+  border: none;
+  background: none;
+  outline: none;
+  cursor: var(--text-input-cursor, text);
+  flex: 1;
+  width: 0px;
+  height: 100%;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  -webkit-box-shadow: 0 0 0 30px var(--color-background-secondary) inset !important;
+}
+
+.input + .clearBtn {
+  display: none;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.input + .clearBtn:hover {
+  color: var(--color-text-primary);
+}
+
+.input:not(:placeholder-shown) + .clearBtn {
+  display: block;
+}
+
+.multiline .input {
+  resize: vertical;
+  padding: 11px 16px;
+}
+
+.input::placeholder {
+  font-weight: 400;
+  color: #9e9e9e;
+}
+
+/* .disabled .label {
+  color: var(--color-text-disabled)
+}
+
+.disabled .field {
+  cursor: auto;
+  color: var(--color-text-disabled);
+  border: 1px dashed var(--color-border-disabled);
+  box-shadow: none;
+}
+
+.disabled .field .prefix, .disabled .field .suffix {
+  color: var(--color-text-disabled) !important;
+}
+
+.disabled .input {
+  cursor: auto;
+  color: var(--color-text-disabled)
+} */
+
+.readOnly .field {
+  cursor: auto;
+  border: 1px solid var(--color-divider-primary);
+  box-shadow: none;
+}
+
+.hasError .field {
+  border-color: #ff8080;
+}

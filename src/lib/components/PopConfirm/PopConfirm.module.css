@@ -1,0 +1,45 @@
+.popConfirm {
+}
+
+.popConfirm .popConfirmPopup {
+  position: fixed;
+  z-index: 1000;
+  background-color: var(--color-background-primary);
+  border-radius: 4px;
+  padding: var(--gutter-small);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+  filter: drop-shadow(0px 2px 2px rgba(18, 18, 18, 0.15)) drop-shadow(0px 1px 5px rgba(18, 18, 18, 0.2));
+}
+
+:global(.dark) .popConfirm .popConfirmPopup {
+  filter: drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.6));
+}
+
+.popConfirm .popConfirmPopup.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popConfirm .popConfirmPopup .popConfirmTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-small);
+  font-size: var(--font-size-regular);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--gutter-small);
+}
+
+.popConfirm .popConfirmPopup .popConfirmText {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--gutter-small);
+}
+
+.popConfirm .popConfirmPopup .popConfirmActions {
+  display: flex;
+  gap: var(--gutter-regular);
+  --button-border-radius: var(--border-radius-regular) !important;
+}
