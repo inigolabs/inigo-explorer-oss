@@ -1,16 +1,26 @@
 import "./Icon.scss";
 import classNames from "classnames";
 import { IIconProps, Size } from "./Icon.types";
-import Add from "@mui/icons-material/Add";
-import Clear from "@mui/icons-material/Clear";
-import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUp from "@mui/icons-material/ArrowDropUp";
-import Warning from "@mui/icons-material/Warning";
-import Check from "@mui/icons-material/Check";
-import TaskOutlined from "@mui/icons-material/TaskOutlined";
-import StopOutlined from "@mui/icons-material/StopOutlined";
-import X from "@mui/icons-material/X";
-import Login from "@mui/icons-material/Login";
+// import Add from "@mui/icons-material/Add";
+// import Clear from "@mui/icons-material/Clear";
+// import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
+// import ArrowDropUp from "@mui/icons-material/ArrowDropUp";
+// import Warning from "@mui/icons-material/Warning";
+// import Check from "@mui/icons-material/Check";
+// import TaskOutlined from "@mui/icons-material/TaskOutlined";
+// import StopOutlined from "@mui/icons-material/StopOutlined";
+// import Login from "@mui/icons-material/Login";
+import {
+  Add,
+  Clear,
+  ArrowDropDown,
+  ArrowDropUp,
+  Warning,
+  Check,
+  TaskOutlined,
+  StopOutlined,
+  Login,
+} from "@mui/icons-material";
 
 export {
   Add,
@@ -22,7 +32,6 @@ export {
   TaskOutlined,
   StopOutlined,
   Login,
-  X,
 };
 
 export function IconClose() {

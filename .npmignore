@@ -1,4 +1,3 @@
-src
 node_modules
 .gitignore
 eslint.config.js
