@@ -32,6 +32,7 @@ yarn add @inigolabs/graphql-explorer
 Import the `Explorer` component and include it in your application. The `defaultState` prop is **required** to initialize the explorer.
 
 ```tsx
+import "@inigolabs/graphql-explorer/styles";
 import Explorer from "@inigolabs/graphql-explorer";
 
 function App() {
