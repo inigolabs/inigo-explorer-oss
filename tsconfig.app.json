@@ -22,7 +22,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "typeRoots": ["./dist/index.d.ts", "node_modules/@types"]
+    "typeRoots": ["./dist/index.d.ts", "node_modules/@types"],
+    "types": ["@mui/types"]
   },
   "include": ["src", "example", "src/example.tsx"]
 }

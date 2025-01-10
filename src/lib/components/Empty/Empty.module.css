@@ -1,0 +1,41 @@
+.Container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 520;
+  padding: 60px;
+  background-color: var(--color-background-primary);
+}
+
+.Image {
+  margin-bottom: 16px;
+}
+
+.Message {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  text-align: center;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.Description {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.Description a {
+  color: var(--color-accent);
+}

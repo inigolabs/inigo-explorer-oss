@@ -57,123 +57,120 @@ import ExplorerRequest, { RequestRef } from "./components/Request/Request";
 import ExplorerResponse from "./components/Response/Response";
 import ExplorerSidebar from "./components/Sidebar/Sidebar";
 import styles from "./Explorer.module.css";
+import { HashRouter } from "react-router-dom";
+import Drawer from "../components/Drawer/Drawer";
+import Schema from "../components/Schema/Schema";
+import {
+  ISchemaPropsItemProperty,
+  ISchemaPropsItemPropertyTypeDef,
+  ISchemaPropsItemType,
+  ISchemaPropsModel,
+} from "../components/Schema/Schema.types";
 
-// Function to parse the type details from introspection query
-// function parseTypeDetails(type: any): ISchemaPropsItemPropertyTypeDef {
-//   const typeDef: ISchemaPropsItemPropertyTypeDef = {
-//     Index: type.index || 0,
-//     TypeName: type.name || "",
-//     Required: type.kind === "NON_NULL",
-//   };
+function parseTypeDetails(type: any): ISchemaPropsItemPropertyTypeDef {
+  const typeDef: ISchemaPropsItemPropertyTypeDef = {
+    Index: type.index || 0,
+    TypeName: type.name || "",
+    Required: type.kind === "NON_NULL",
+  };
 
-//   if (type.ofType) {
-//     typeDef.List = parseTypeDetails(type.ofType);
-//   }
+  if (type.ofType) {
+    typeDef.List = parseTypeDetails(type.ofType);
+  }
 
-//   return typeDef;
-// }
+  return typeDef;
+}
 
-// // Function to map GraphQL kind to ISchemaPropsItemType
-// function mapKindToItemType(kind: string): ISchemaPropsItemType {
-//   switch (kind) {
-//     case "OBJECT":
-//       return ISchemaPropsItemType.Types;
-//     case "INPUT_OBJECT":
-//       return ISchemaPropsItemType.Inputs;
-//     case "INTERFACE":
-//       return ISchemaPropsItemType.Interfaces;
-//     case "ENUM":
-//       return ISchemaPropsItemType.Enums;
-//     case "UNION":
-//       return ISchemaPropsItemType.Unions;
-//     case "SCALAR":
-//       return ISchemaPropsItemType.Scalars;
-//     case "SCHEMA":
-//       return ISchemaPropsItemType.Schema;
-//     default:
-//       return ISchemaPropsItemType.Types; // default to Types if kind is not matched
-//   }
-// }
+// Function to map GraphQL kind to ISchemaPropsItemType
+function mapKindToItemType(kind: string): ISchemaPropsItemType {
+  switch (kind) {
+    case "OBJECT":
+      return ISchemaPropsItemType.Types;
+    case "INPUT_OBJECT":
+      return ISchemaPropsItemType.Inputs;
+    case "INTERFACE":
+      return ISchemaPropsItemType.Interfaces;
+    case "ENUM":
+      return ISchemaPropsItemType.Enums;
+    case "UNION":
+      return ISchemaPropsItemType.Unions;
+    case "SCALAR":
+      return ISchemaPropsItemType.Scalars;
+    case "SCHEMA":
+      return ISchemaPropsItemType.Schema;
+    default:
+      return ISchemaPropsItemType.Types; // default to Types if kind is not matched
+  }
+}
 
-// // Function to format introspection query response
-// export function formatIntrospectionResponse(
-//   introspectionData: any
-// ): ISchemaPropsModel {
-//   const schema: ISchemaPropsModel = introspectionData.__schema.types.map(
-//     (type: any) => {
-//       let properties: ISchemaPropsItemProperty[] = [];
+// Function to format introspection query response
+export function formatIntrospectionResponse(
+  introspectionData: any
+): ISchemaPropsModel {
+  const schema: ISchemaPropsModel = introspectionData.__schema.types.map(
+    (type: any) => {
+      let properties: ISchemaPropsItemProperty[] = [];
 
-//       if (type.fields || type.inputFields) {
-//         properties = (type.fields || type.inputFields).map(
-//           (field: any, index: number) => ({
-//             name: field.name,
-//             count: field.count || 0,
-//             calls: field.calls || 0,
-//             tags: field.tags || [],
-//             type: field.type.name,
-//             description: field.description || "",
-//             typeDetails: {
-//               Name: field.name,
-//               DefaultValue: field.defaultValue || null,
-//               Index: index,
-//               Type: parseTypeDetails(field.type),
-//             },
-//             args: field.args?.reduce(
-//               (acc: Record<string, any>, arg: any, argIndex: number) => {
-//                 acc[arg.name] = {
-//                   Name: arg.name,
-//                   DefaultValue: arg.defaultValue || null,
-//                   Index: argIndex,
-//                   Type: parseTypeDetails(arg.type),
-//                 };
-//                 return acc;
-//               },
-//               {}
-//             ),
-//           })
-//         );
-//       }
+      if (type.fields || type.inputFields) {
+        properties = (type.fields || type.inputFields).map(
+          (field: any, index: number) => ({
+            name: field.name,
+            count: field.count || 0,
+            calls: field.calls || 0,
+            tags: field.tags || [],
+            type: field.type.name,
+            description: field.description || "",
+            typeDetails: {
+              Name: field.name,
+              DefaultValue: field.defaultValue || null,
+              Index: index,
+              Type: parseTypeDetails(field.type),
+            },
+            args: field.args?.reduce(
+              (acc: Record<string, any>, arg: any, argIndex: number) => {
+                acc[arg.name] = {
+                  Name: arg.name,
+                  DefaultValue: arg.defaultValue || null,
+                  Index: argIndex,
+                  Type: parseTypeDetails(arg.type),
+                };
+                return acc;
+              },
+              {}
+            ),
+          })
+        );
+      }
 
-//       if (type.enumValues) {
-//         properties = type.enumValues.map((enumValue: any, index: number) => ({
-//           name: enumValue.name,
-//           count: enumValue.count || 0,
-//           calls: enumValue.calls || 0,
-//           tags: enumValue.tags || [],
-//           type: type.name,
-//           description: enumValue.description || "",
-//           typeDetails: {
-//             Name: enumValue.name,
-//             Index: index,
-//             Type: parseTypeDetails(type),
-//           },
-//         }));
-//       }
+      if (type.enumValues) {
+        properties = type.enumValues.map((enumValue: any, index: number) => ({
+          name: enumValue.name,
+          count: enumValue.count || 0,
+          calls: enumValue.calls || 0,
+          tags: enumValue.tags || [],
+          type: type.name,
+          description: enumValue.description || "",
+          typeDetails: {
+            Name: enumValue.name,
+            Index: index,
+            Type: parseTypeDetails(type),
+          },
+        }));
+      }
 
-//       return {
-//         name: type.name,
-//         type: mapKindToItemType(type.kind),
-//         tags: type.tags || [],
-//         description: type.description || "",
-//         properties,
-//         implements: type.interfaces?.map((iface: any) => iface.name) || [],
-//       };
-//     }
-//   );
+      return {
+        name: type.name,
+        type: mapKindToItemType(type.kind),
+        tags: type.tags || [],
+        description: type.description || "",
+        properties,
+        implements: type.interfaces?.map((iface: any) => iface.name) || [],
+      };
+    }
+  );
 
-//   return schema;
-// }
-
-// subscription
-// (async () => {
-//   const subscription = client.iterate({
-//     query: 'subscription { greetings }',
-//   });
-
-//   for await (const event of subscription) {
-
-//   }
-// })();
+  return schema;
+}
 
 export interface ExplorerFetcherOptions {
   query?: string;
@@ -270,6 +267,12 @@ interface ExplorerProps {
     name: string;
     label?: Maybe<string>;
   }>;
+  request?: (
+    options: ExplorerFetcherOptions & {
+      proxyEnabled?: boolean;
+      fetcherUrl?: string;
+    }
+  ) => Promise<Response>;
   access?: "admin" | "user";
   onStateChange?: (state: ILocalPreferencesData["explorer"]) => void;
   theme?: "light" | "dark";
@@ -911,30 +914,28 @@ export default function Explorer(props: ExplorerProps) {
           body.operationName = options.operationName;
         }
 
-        return fetch(
-          proxyEnabled
-            ? "https://nr07f72g6a.execute-api.us-west-1.amazonaws.com/apply"
-            : fetcherUrl,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              ...options.headers,
-            },
-            body: JSON.stringify(
-              proxyEnabled
-                ? {
-                    hostname: fetcherUrl,
-                    request: body,
-                    headers: options.headers,
-                  }
-                : body
-            ),
-          }
-        );
+        if (props.request) {
+          return props.request({
+            query: body.query,
+            variables: body.variables,
+            extensions: body.extensions,
+            operationName: body.operationName,
+            proxyEnabled,
+            fetcherUrl,
+          });
+        }
+
+        return fetch(fetcherUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...options.headers,
+          },
+          body: JSON.stringify(body),
+        });
       };
     },
-    []
+    [props.request]
   );
 
   const createWsFetcher = useCallback((fetcherUrl: string) => {
@@ -1899,6 +1900,9 @@ export default function Explorer(props: ExplorerProps) {
   const [saveModalSelectedCollection, setSaveModalSelectedCollection] =
     useState<string>("");
 
+  const [isDrawerVisible, setIsDrawerVisible] = useState<boolean>(false);
+  const schemaBasePath = useRef<string>(window.location.pathname);
+
   if (!ready) {
     return null;
   }
@@ -1915,9 +1919,20 @@ export default function Explorer(props: ExplorerProps) {
         }
       }}
     >
-      {/* <Drawer visible title="Schema">
-        <HashRouter>{!!schema && <Schema data={formatIntrospectionResponse(schema)} />}</HashRouter>
-      </Drawer> */}
+      <Drawer
+        visible={isDrawerVisible}
+        onClose={() => setIsDrawerVisible(false)}
+        title="Schema"
+      >
+        {!!schema && (
+          <Schema
+            data={formatIntrospectionResponse(schema)}
+            theme={props.theme || "light"}
+            compact
+            navigationMode="query"
+          />
+        )}
+      </Drawer>
       <Modal
         className={classNames(styles.inputModal, {
           [styles.endpointModal]: inputModalIsEndpoint,
@@ -2297,6 +2312,7 @@ export default function Explorer(props: ExplorerProps) {
             });
           }}
           onUrlRestore={() => setUrl(props.defaultState?.url || "")}
+          hasProxy={!!props.request}
           proxyEnabled={proxyEnabled}
           onProxyEnabledChange={setProxyEnabled}
           historyEnabled={historyEnabled}
@@ -2328,6 +2344,7 @@ export default function Explorer(props: ExplorerProps) {
           onUrlChange={(value) => throttledSetUrl(value)}
           serviceKey={props.serviceKey}
           theme={props.theme}
+          onShowSchemaDrawer={() => setIsDrawerVisible(true)}
         />
         {activeTab && (
           <div className={styles.tab}>

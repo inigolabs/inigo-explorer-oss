@@ -4,6 +4,7 @@ import moment from "moment";
 import { getQueryParamByName } from "./queryParams";
 import { message } from "../components/MessagesWrapper/MessagesWrapper.utils";
 import { MessageType } from "../components/MessagesWrapper/MessagesWrapper.types";
+import { Maybe } from "./types";
 
 export function sortObjectOfObjects(obj: any, sortedKey: string) {
   if (obj) {
@@ -553,3 +554,55 @@ export const renderStringWithSearch = (
     </span>
   );
 };
+
+export interface Service {
+  name: string;
+  label?: string;
+}
+
+export function serviceToPath(service: Maybe<Service>) {
+  if (!service) {
+    return "";
+  }
+
+  if (!service.name) {
+    return "";
+  }
+
+  let result = service.name;
+
+  if (service.label) {
+    result += `:${service.label}`;
+  }
+
+  return result;
+}
+
+export function serviceToFullPath(
+  service: Maybe<Service>,
+  parent: Maybe<Service>
+) {
+  if (!service) {
+    return "";
+  }
+
+  if (!service.name) {
+    return "";
+  }
+
+  let result = "";
+
+  if (parent) {
+    result = `${parent.name}`;
+
+    if (parent.label) {
+      result += `:${parent.label}`;
+    }
+
+    result += `:${service.name}`;
+  } else {
+    result = serviceToPath(service);
+  }
+
+  return result;
+}

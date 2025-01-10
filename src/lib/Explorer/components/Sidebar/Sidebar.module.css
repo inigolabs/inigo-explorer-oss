@@ -112,9 +112,7 @@
   font-weight: var(--font-weight-regular);
   border-radius: var(--border-radius-regular);
   border: 1px solid var(--color-divider-primary);
-  transition:
-    color var(--transition),
-    border-color var(--transition),
+  transition: color var(--transition), border-color var(--transition),
     background-color var(--transition);
 }
 
@@ -165,9 +163,7 @@
   height: 2px;
   border-radius: 2px;
   background-color: var(--color-text-primary);
-  transition:
-    left var(--transition),
-    width var(--transition);
+  transition: left var(--transition), width var(--transition);
 }
 
 .sidebar .content {
@@ -180,6 +176,12 @@
   --checkbox-size: 20px;
   --checkbox-border-radius: 100%;
   --checkbox-inactive-color: var(--color-text-disabled);
+}
+
+.sidebar .docs .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .sidebar .title + .divider {
@@ -265,7 +267,8 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  font-family: 'Roboto Mono', monospace;font-size: 12px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 12px;
   font-weight: 500;
   font-size: 12px;
   font-weight: 500;
@@ -303,7 +306,7 @@
 }
 
 .sidebar .docs .field .type::before {
-  content: ': ';
+  content: ": ";
 }
 
 .sidebar .history .title {
@@ -345,7 +348,7 @@
 
 .sidebar .history .header .delete::before {
   display: block;
-  content: '...';
+  content: "...";
   position: absolute;
   left: -20px;
   top: 2px;
@@ -410,9 +413,7 @@
 }
 
 .sidebar .history .body .query .tooltip {
-  font-family:
-    Roboto Mono,
-    monospace;
+  font-family: Roboto Mono, monospace;
   color: var(--color-text-secondary);
   font-size: var(--font-size-small);
   white-space: pre-wrap;
@@ -482,7 +483,7 @@
   gap: var(--gutter-small);
   height: 100%;
   overflow-y: auto;
-  padding-top: var(--gutter-small)
+  padding-top: var(--gutter-small);
 }
 
 .sidebar .collectionsWrapper .title {
@@ -494,7 +495,6 @@
 .sidebar .collections .collection {
   color: var(--color-text-secondary);
 }
-
 
 .sidebar .collections .collection :is(.name, .editName) {
   display: grid;
@@ -574,7 +574,10 @@
   grid-template-columns: 1fr auto;
   gap: var(--gutter-small);
   align-items: center;
-  padding-left: calc(var(--gutter-regular) + var(--gutter-extra-small) + var(--gutter-extra-small));
+  padding-left: calc(
+    var(--gutter-regular) + var(--gutter-extra-small) +
+      var(--gutter-extra-small)
+  );
   border-radius: var(--border-radius-regular);
   transition: background-color var(--transition);
 }
@@ -610,7 +613,8 @@
   border: 1px solid var(--color-divider-code);
   border-radius: var(--border-radius-regular);
   opacity: 0;
-  transition: color var(--transition), background-color var(--transition), opacity var(--transition);
+  transition: color var(--transition), background-color var(--transition),
+    opacity var(--transition);
 }
 
 .sidebar .collections .collection .button + .button {
@@ -633,7 +637,7 @@
 .sidebar .collections .collectionsList .query:hover .button:hover,
 .sidebar .collections .collection :is(.name, .editName):hover .button:hover {
   color: var(--color-accent);
-  background-color: var(--color-background-secondary)
+  background-color: var(--color-background-secondary);
 }
 
 .sidebar .settings .actions {

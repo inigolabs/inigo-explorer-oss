@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
-import Explorer from "./index";
 import { StrictMode } from "react";
+import Explorer from "./index";
 
 function App() {
   const defaultState = {};

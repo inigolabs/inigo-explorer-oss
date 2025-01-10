@@ -29,7 +29,10 @@ import {
   removeFieldFromQuery,
   removeTypeFieldsFromQuery,
 } from "../../Explorer.utils";
-import NewButton, { ButtonSize } from "../../../components/Buttons/Button";
+import NewButton, {
+  ButtonSize,
+  ButtonVariant,
+} from "../../../components/Buttons/Button";
 import Button from "../../../components/Button/Button";
 import Checkbox from "../../../components/Checkbox/Checkbox";
 import {
@@ -45,6 +48,7 @@ import Icon, {
   Check,
   Close,
   IconCheckCircle,
+  IconCode,
   IconCollections,
   IconDocs,
   IconEdit,
@@ -107,6 +111,7 @@ const EXPLORER_SIDEBAR_TABS_LABEL_MAP: Record<string, string> = {
 export interface ExplorerSidebarProps {
   url: string;
   proxyEnabled: boolean;
+  hasProxy: boolean;
   historyEnabled: boolean;
   tab: Maybe<ExplorerTab>;
   tabs: ExplorerTab[];
@@ -139,6 +144,7 @@ export interface ExplorerSidebarProps {
   onTabUpdate?: (update: (prev: ExplorerTab) => ExplorerTab) => void;
   onTabCreate?: (tab: ExplorerTab) => void;
   onTabActivate?: (id: string) => void;
+  onShowSchemaDrawer?: () => void;
   cursorPosition?: { lineNumber: number; column: number };
 }
 
@@ -609,7 +615,21 @@ function ExplorerSidebarDocs(props: ExplorerSidebarProps) {
 
   return (
     <div className={styles.docs}>
-      <div className={styles.title}>Query builder</div>
+      <div className={styles.title}>
+        Query builder
+        {!!props.schema && (
+          <NewButton
+            variant={ButtonVariant.Link}
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onShowSchemaDrawer?.();
+            }}
+          >
+            Schema
+            <Icon icon={<IconCode />} size={16} />
+          </NewButton>
+        )}
+      </div>
       <div className={styles.divider} />
       <TextInput
         ref={inputRef}
@@ -1331,28 +1351,32 @@ function ExplorerSidebarSettings(props: ExplorerSidebarProps) {
         </div>
       </div>
       <div className={styles.divider} />
-      <div className={styles.subtitle}>Proxy</div>
-      <div className={styles.item}>
-        <div className={styles.checkbox}>
-          <div className={styles.label}>
-            Enabled
-            <Tooltip text="Enabling proxy, sends operation's request and headers via Inigo's proxy server. This is often needed to allow the server to respond.">
-              <Icon icon={<IconInfo />} size={16} className={styles.info} />
-            </Tooltip>
+      {props.hasProxy && (
+        <>
+          <div className={styles.subtitle}>Proxy</div>
+          <div className={styles.item}>
+            <div className={styles.checkbox}>
+              <div className={styles.label}>
+                Enabled
+                <Tooltip text="Enabling proxy, sends operation's request and headers via Inigo's proxy server. This is often needed to allow the server to respond.">
+                  <Icon icon={<IconInfo />} size={16} className={styles.info} />
+                </Tooltip>
+              </div>
+              <Checkbox
+                ref={proxyCheckboxRef}
+                // label="Enabled"
+                variant={CheckboxVariant.Switch}
+                defaultValue={props.proxyEnabled}
+                onChange={(value) => {
+                  props.onProxyEnabledChange?.(value);
+                }}
+                disabled={props.url.includes("localhost")}
+              />
+            </div>
           </div>
-          <Checkbox
-            ref={proxyCheckboxRef}
-            // label="Enabled"
-            variant={CheckboxVariant.Switch}
-            defaultValue={props.proxyEnabled}
-            onChange={(value) => {
-              props.onProxyEnabledChange?.(value);
-            }}
-            disabled={props.url.includes("localhost")}
-          />
-        </div>
-      </div>
-      <div className={styles.divider} />
+          <div className={styles.divider} />
+        </>
+      )}
       <div className={styles.subtitle}>History</div>
       <div className={styles.item}>
         <div className={styles.checkbox}>

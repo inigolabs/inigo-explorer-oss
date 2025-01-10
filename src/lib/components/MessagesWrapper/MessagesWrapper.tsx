@@ -1,6 +1,6 @@
 import styles from "./MessagesWrapper.module.css";
 
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 import { MessageProps, MessageType } from "./MessagesWrapper.types";
@@ -10,6 +10,7 @@ import Icon, { Close, IconCheck } from "../Icon/Icon";
 import Button, { ButtonVariant } from "../Buttons/Button";
 import { IconClose } from "../Icon/Icon";
 import { clearQueue, getQueue, mounterRef } from "./MessagesWrapper.utils";
+import { Opacity } from "@mui/icons-material";
 
 const MessagesWrapper = () => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
@@ -92,63 +93,62 @@ const MessagesWrapper = () => {
   return (
     <div className={classNames(styles.wrapper)}>
       <div className={styles.container}>
-        <TransitionGroup component={null}>
+        <AnimatePresence mode="popLayout">
           {messages.map((message, i) => (
-            <CSSTransition
+            <motion.div
               key={message.id}
-              classNames={{
-                appear: styles.messageAppear,
-                appearActive: styles.messageAppearActive,
-                appearDone: styles.messageAppearDone,
-                enter: styles.messageEnter,
-                enterActive: styles.messageEnterActive,
-                enterDone: styles.messageEnterDone,
-                exit: styles.messageExit,
-                exitActive: styles.messageExitActive,
-                exitDone: styles.messageExitDone,
+              ref={messagesRefs[i]}
+              className={classNames(
+                styles.message,
+                styles[message.type ?? "success"]
+              )}
+              initial={{
+                translateY: "-100%",
+                opacity: 0,
               }}
-              timeout={300}
+              animate={{
+                translateY: 0,
+                opacity: 1,
+              }}
+              exit={{
+                translateY: "-100%",
+                opacity: 0,
+              }}
+              transition={{ duration: 0.3, ease: [0.6, 0.6, 0, 1] }}
+              layout
             >
-              <div
-                ref={messagesRefs[i]}
-                className={classNames(
-                  styles.message,
-                  styles[message.type ?? "success"]
+              <div className={styles.icon}>
+                {message.type === MessageType.Success && (
+                  <Icon icon={<IconCheck />} size={16} />
                 )}
-              >
-                <div className={styles.icon}>
-                  {message.type === MessageType.Success && (
-                    <Icon icon={<IconCheck />} size={16} />
-                  )}
-                  {message.type === MessageType.Error && (
-                    <Icon icon={<IconClose />} size={16} />
-                  )}
-                </div>
-                <div className={styles.content}>
-                  <div className={styles.text}>{message.text}</div>
-                </div>
-                {message.action && (
-                  <Button
-                    className={styles.action}
-                    variant={ButtonVariant.Link}
-                    onClick={() => {
-                      removeMessage(message);
-                      message.action!.onClick();
-                    }}
-                  >
-                    {message.action.label}
-                  </Button>
+                {message.type === MessageType.Error && (
+                  <Icon icon={<IconClose />} size={16} />
                 )}
-                <div
-                  className={styles.close}
-                  onClick={() => removeMessage(message)}
-                >
-                  <Icon icon={<Close />} size={12} />
-                </div>
               </div>
-            </CSSTransition>
+              <div className={styles.content}>
+                <div className={styles.text}>{message.text}</div>
+              </div>
+              {message.action && (
+                <Button
+                  className={styles.action}
+                  variant={ButtonVariant.Link}
+                  onClick={() => {
+                    removeMessage(message);
+                    message.action!.onClick();
+                  }}
+                >
+                  {message.action.label}
+                </Button>
+              )}
+              <div
+                className={styles.close}
+                onClick={() => removeMessage(message)}
+              >
+                <Icon icon={<Close />} size={12} />
+              </div>
+            </motion.div>
           ))}
-        </TransitionGroup>
+        </AnimatePresence>
       </div>
     </div>
   );
