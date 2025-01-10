@@ -5,7 +5,7 @@ import {
   IntrospectionObjectType,
   IntrospectionQuery,
 } from "graphql";
-import escapeRegExp from "lodash/escapeRegExp";
+import { escapeRegExp } from "lodash";
 import moment from "moment";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 

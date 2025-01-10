@@ -10,8 +10,7 @@ import {
   ISchemaPropsModel,
 } from "./Schema.types";
 import Tooltip, { TooltipPosition } from "../Tooltip/Tooltip";
-import escapeRegExp from "lodash/escapeRegExp";
-import lowerCase from "lodash/lowerCase";
+import { lowerCase, escapeRegExp } from "lodash";
 import Select, { Option as SelectOption } from "../Select/Select";
 import Drawer from "../Drawer/Drawer";
 import {
