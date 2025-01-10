@@ -10,7 +10,6 @@ import Icon, { Close, IconCheck } from "../Icon/Icon";
 import Button, { ButtonVariant } from "../Buttons/Button";
 import { IconClose } from "../Icon/Icon";
 import { clearQueue, getQueue, mounterRef } from "./MessagesWrapper.utils";
-import { Opacity } from "@mui/icons-material";
 
 const MessagesWrapper = () => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
