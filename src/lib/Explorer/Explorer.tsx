@@ -57,7 +57,6 @@ import ExplorerRequest, { RequestRef } from "./components/Request/Request";
 import ExplorerResponse from "./components/Response/Response";
 import ExplorerSidebar from "./components/Sidebar/Sidebar";
 import styles from "./Explorer.module.css";
-import { HashRouter } from "react-router-dom";
 import Drawer from "../components/Drawer/Drawer";
 import Schema from "../components/Schema/Schema";
 import {
@@ -1901,7 +1900,6 @@ export default function Explorer(props: ExplorerProps) {
     useState<string>("");
 
   const [isDrawerVisible, setIsDrawerVisible] = useState<boolean>(false);
-  const schemaBasePath = useRef<string>(window.location.pathname);
 
   if (!ready) {
     return null;

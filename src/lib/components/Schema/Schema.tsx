@@ -11,7 +11,7 @@ import {
 } from "./Schema.types";
 import Tooltip, { TooltipPosition } from "../Tooltip/Tooltip";
 import escapeRegExp from "lodash/escapeRegExp";
-import _lowerCase from "lodash/lowerCase";
+import lowerCase from "lodash/lowerCase";
 import Select, { Option as SelectOption } from "../Select/Select";
 import Drawer from "../Drawer/Drawer";
 import {
@@ -28,12 +28,9 @@ import Icon, { ArrowDown, ArrowRight, IconGraph } from "../Icon/Icon";
 import { serviceToFullPath, serviceToPath } from "../../utils/helpers";
 import Button, { ButtonSize } from "../Buttons/Button";
 import { LayoutWithNavigation } from "../LayoutWithNavigation/LayoutWithNavigation";
-import {
-  getQueryParamByName,
-  updateQueryParamByName,
-} from "../../utils/queryParams";
+import { getQueryParamByName } from "../../utils/queryParams";
 
-const lowerCase = (str?: string) => _lowerCase(str).replace(/\s/g, "");
+const toLowerCase = (str?: string) => lowerCase(str).replace(/\s/g, "");
 
 interface Service {
   name: string;
@@ -217,7 +214,7 @@ const Tags = ({
               <div className="join__type__drawer__list">
                 {join__type
                   .map((t) => {
-                    const lowerCasedValue = lowerCase(
+                    const lowerCasedValue = toLowerCase(
                       (t.details.graph ?? t.details.name).Value.Value
                     );
 
@@ -225,7 +222,7 @@ const Tags = ({
                       (subService) => {
                         return (
                           subService &&
-                          lowerCase(subService.name) === lowerCasedValue
+                          toLowerCase(subService.name) === lowerCasedValue
                         );
                       }
                     );
@@ -270,11 +267,11 @@ const Tags = ({
         </>
       );
     } else if (join__type.length === 1) {
-      const lowerCasedValue = lowerCase(
+      const lowerCasedValue = toLowerCase(
         join__type[0].details.graph.Value.Value
       );
       const service = activeService?.subServices?.find((subService) => {
-        return subService && lowerCase(subService.name) === lowerCasedValue;
+        return subService && toLowerCase(subService.name) === lowerCasedValue;
       });
 
       if (service) {
@@ -336,13 +333,13 @@ const Tags = ({
                     return (
                       <div>
                         {Object.keys(t.details ?? {}).map((key) => {
-                          const lowerCasedValue = lowerCase(
+                          const lowerCasedValue = toLowerCase(
                             t.details[key].Value.Value
                           );
                           const service = activeService?.subServices?.find(
                             (subService) =>
                               subService &&
-                              lowerCase(subService.name) === lowerCasedValue
+                              toLowerCase(subService.name) === lowerCasedValue
                           );
 
                           if (key === "graph" && service) {

@@ -17,10 +17,6 @@ import Loader from "../Loader/Loader";
 import { debounce, get } from "lodash";
 import Empty from "../Empty/Empty";
 import Button, { ButtonVariant } from "../Buttons/Button";
-import {
-  getQueryParamByName,
-  updateQueryParamByName,
-} from "../../utils/queryParams";
 
 export interface LayoutWithNavigationProps {
   className?: string;
