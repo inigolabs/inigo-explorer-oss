@@ -172,12 +172,15 @@ function Calendar(props: ICalendarProps) {
       const hovered = moment(props.hovered);
       const maxSelected = Array.isArray(selected) ? selected[1] : selected;
 
-      const result =
-        itemDate.isSameOrBefore(hovered, "days") &&
-        itemDate.isAfter(maxSelected, "days") &&
-        hovered.isAfter(maxSelected, "days");
+      if (Array.isArray(selected) && selected[0] === selected[1]) {
+        return (
+          itemDate.isSameOrBefore(hovered, "days") &&
+          itemDate.isAfter(maxSelected, "days") &&
+          hovered.isAfter(maxSelected, "days")
+        );
+      }
 
-      return result;
+      return false;
     }
 
     return false;
@@ -187,7 +190,7 @@ function Calendar(props: ICalendarProps) {
     let newSelected: typeof selected;
 
     if (Array.isArray(selected)) {
-      if (itemDate.isAfter(selected[1])) {
+      if (selected[0] === selected[1] && itemDate.isAfter(selected[1])) {
         newSelected = [selected[0], itemDate];
       } else {
         newSelected = [itemDate, itemDate];

@@ -1,4 +1,4 @@
-import { capitalize } from 'lodash';
+import { capitalize } from "lodash";
 import {
   ArgumentNode,
   DefinitionNode,
@@ -21,12 +21,12 @@ import {
   SelectionNode,
   VariableDefinitionNode,
   visit,
-} from 'graphql';
+} from "graphql";
 
 type Maybe<T> = T | null | undefined;
 
 export function healQuery(query: string) {
-  return query.replace(/\{(\s+)?\}/g, '');
+  return query.replace(/\{(\s+)?\}/g, "");
 }
 
 export function extractOfType(type: GraphQLOutputType): any {
@@ -57,15 +57,18 @@ export function findFieldTypeInSchema(path: string, schema: GraphQLSchema) {
     return;
   }
 
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let type: Maybe<GraphQLType>;
 
-  if (operation === 'query') {
+  if (operation === "query") {
     type = schema.getQueryType();
-  } else if (operation === 'mutation') {
+  } else if (operation === "mutation") {
     type = schema.getMutationType();
-  } else if (operation === 'subscription') {
+  } else if (operation === "subscription") {
     type = schema.getSubscriptionType();
   }
 
@@ -97,15 +100,18 @@ export function findFieldTypeInSchema(path: string, schema: GraphQLSchema) {
 }
 
 export function findFieldInSchema(path: string, schema: GraphQLSchema) {
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let type: Maybe<GraphQLType>;
 
-  if (operation === 'query') {
+  if (operation === "query") {
     type = schema.getQueryType();
-  } else if (operation === 'mutation') {
+  } else if (operation === "mutation") {
     type = schema.getMutationType();
-  } else if (operation === 'subscription') {
+  } else if (operation === "subscription") {
     type = schema.getSubscriptionType();
   }
 
@@ -136,10 +142,18 @@ export function findFieldInSchema(path: string, schema: GraphQLSchema) {
   return null;
 }
 
-export function addFieldToQuery(query: string, path: string, schema: GraphQLSchema, operationName?: string) {
+export function addFieldToQuery(
+  query: string,
+  path: string,
+  schema: GraphQLSchema,
+  operationName?: string
+) {
   query = healQuery(query);
 
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let doc: DocumentNode | undefined;
 
@@ -167,17 +181,19 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
     };
   }
 
-  let operationDefinition: OperationDefinitionNode = doc.definitions.find((v) => {
-    if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
-      if (operationName) {
-        return v.name?.value === operationName;
+  let operationDefinition: OperationDefinitionNode = doc.definitions.find(
+    (v) => {
+      if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
+        if (operationName) {
+          return v.name?.value === operationName;
+        }
+
+        return true;
       }
 
-      return true;
+      return false;
     }
-
-    return false;
-  }) as OperationDefinitionNode;
+  ) as OperationDefinitionNode;
 
   if (!operationDefinition) {
     operationDefinition = {
@@ -199,15 +215,15 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
   if (segments.length === 0) {
     return {
       query: print(doc)
-        .split('\n')
+        .split("\n")
         .map((v) => {
           if (v.includes(`${operation} New${capitalize(operation)}`)) {
-            return v + ' {}';
+            return v + " {}";
           }
 
           return v;
         })
-        .join('\n'),
+        .join("\n"),
     };
   }
 
@@ -231,9 +247,10 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
           };
         }
 
-        let fieldNode: FieldNode = operationDefinition.selectionSet.selections.find((v) => {
-          return v.kind === Kind.FIELD && v.name.value === fieldName;
-        }) as FieldNode;
+        let fieldNode: FieldNode =
+          operationDefinition.selectionSet.selections.find((v) => {
+            return v.kind === Kind.FIELD && v.name.value === fieldName;
+          }) as FieldNode;
 
         if (!fieldNode) {
           fieldNode = {
@@ -244,11 +261,14 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
             },
           };
 
-          const typeField = findFieldInSchema([operation, ...currentPath, fieldName].join('.'), schema);
+          const typeField = findFieldInSchema(
+            [operation, ...currentPath, fieldName].join("."),
+            schema
+          );
 
           if (typeField && typeField.args) {
             typeField.args.forEach((arg) => {
-              if (!arg.type.toString().endsWith('!')) {
+              if (!arg.type.toString().endsWith("!")) {
                 return;
               }
 
@@ -262,15 +282,17 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
               let i = 2;
 
               while (
-                (operationDefinition.variableDefinitions as VariableDefinitionNode[]).find(
-                  (v) => v.variable.name.value === variableName,
-                )
+                (
+                  operationDefinition.variableDefinitions as VariableDefinitionNode[]
+                ).find((v) => v.variable.name.value === variableName)
               ) {
                 variableName = arg.name + i;
                 ++i;
               }
 
-              (operationDefinition.variableDefinitions as VariableDefinitionNode[]).push({
+              (
+                operationDefinition.variableDefinitions as VariableDefinitionNode[]
+              ).push({
                 kind: Kind.VARIABLE_DEFINITION,
                 variable: {
                   kind: Kind.VARIABLE,
@@ -315,7 +337,9 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
             });
           }
 
-          (operationDefinition.selectionSet.selections as SelectionNode[]).push(fieldNode);
+          (operationDefinition.selectionSet.selections as SelectionNode[]).push(
+            fieldNode
+          );
         }
       },
     },
@@ -338,9 +362,11 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
             };
           }
 
-          let fieldNode: FieldNode = field.selectionSet!.selections.find((v) => {
-            return v.kind === Kind.FIELD && v.name.value === fieldName;
-          }) as FieldNode;
+          let fieldNode: FieldNode = field.selectionSet!.selections.find(
+            (v) => {
+              return v.kind === Kind.FIELD && v.name.value === fieldName;
+            }
+          ) as FieldNode;
 
           if (!fieldNode) {
             fieldNode = {
@@ -351,11 +377,14 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
               },
             };
 
-            const typeField = findFieldInSchema([operation, ...currentPath, fieldName].join('.'), schema);
+            const typeField = findFieldInSchema(
+              [operation, ...currentPath, fieldName].join("."),
+              schema
+            );
 
             if (typeField && typeField.args) {
               typeField.args.forEach((arg) => {
-                if (!arg.type.toString().endsWith('!')) {
+                if (!arg.type.toString().endsWith("!")) {
                   return;
                 }
 
@@ -369,15 +398,17 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
                 let i = 2;
 
                 while (
-                  (operationDefinition.variableDefinitions as VariableDefinitionNode[]).find(
-                    (v) => v.variable.name.value === variableName,
-                  )
+                  (
+                    operationDefinition.variableDefinitions as VariableDefinitionNode[]
+                  ).find((v) => v.variable.name.value === variableName)
                 ) {
                   variableName = arg.name + i;
                   ++i;
                 }
 
-                (operationDefinition.variableDefinitions as VariableDefinitionNode[]).push({
+                (
+                  operationDefinition.variableDefinitions as VariableDefinitionNode[]
+                ).push({
                   kind: Kind.VARIABLE_DEFINITION,
                   variable: {
                     kind: Kind.VARIABLE,
@@ -438,10 +469,17 @@ export function addFieldToQuery(query: string, path: string, schema: GraphQLSche
   };
 }
 
-export function removeFieldFromQuery(query: string, path: string, operationName?: string) {
+export function removeFieldFromQuery(
+  query: string,
+  path: string,
+  operationName?: string
+) {
   query = healQuery(query);
 
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let doc: DocumentNode | undefined;
 
@@ -455,17 +493,19 @@ export function removeFieldFromQuery(query: string, path: string, operationName?
     };
   }
 
-  let operationDefinition: OperationDefinitionNode = doc.definitions.find((v) => {
-    if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
-      if (operationName) {
-        return v.name?.value === operationName;
+  let operationDefinition: OperationDefinitionNode = doc.definitions.find(
+    (v) => {
+      if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
+        if (operationName) {
+          return v.name?.value === operationName;
+        }
+
+        return true;
       }
 
-      return true;
+      return false;
     }
-
-    return false;
-  }) as OperationDefinitionNode;
+  ) as OperationDefinitionNode;
 
   if (!operationDefinition) {
     return {
@@ -483,11 +523,13 @@ export function removeFieldFromQuery(query: string, path: string, operationName?
           const fieldName = segments[0];
 
           if (operationDefinition.selectionSet) {
-            operationDefinition.selectionSet.selections = operationDefinition.selectionSet.selections.filter((v) => {
-              return v.kind !== Kind.FIELD || v.name.value !== fieldName;
-            });
+            operationDefinition.selectionSet.selections =
+              operationDefinition.selectionSet.selections.filter((v) => {
+                return v.kind !== Kind.FIELD || v.name.value !== fieldName;
+              });
 
-            isOperationSelectionSetEmpty = operationDefinition.selectionSet.selections.length === 0;
+            isOperationSelectionSetEmpty =
+              operationDefinition.selectionSet.selections.length === 0;
           }
         }
       },
@@ -496,13 +538,17 @@ export function removeFieldFromQuery(query: string, path: string, operationName?
       enter(field) {
         currentPath.push(field.name.value);
 
-        if (currentPath.length === segments.length - 1 && currentPath.every((v, i) => v === segments[i])) {
+        if (
+          currentPath.length === segments.length - 1 &&
+          currentPath.every((v, i) => v === segments[i])
+        ) {
           const fieldName = segments[currentPath.length];
 
           if (field.selectionSet) {
-            field.selectionSet.selections = field.selectionSet.selections.filter((v) => {
-              return v.kind !== Kind.FIELD || v.name.value !== fieldName;
-            });
+            field.selectionSet.selections =
+              field.selectionSet.selections.filter((v) => {
+                return v.kind !== Kind.FIELD || v.name.value !== fieldName;
+              });
           }
         }
       },
@@ -548,8 +594,14 @@ ${operation} ${operationDefinition.name?.value} {}`,
       enter(field) {
         currentPath.push(field.name.value);
 
-        if (currentPath.length === segments.length - 1 && currentPath.every((v, i) => v === segments[i])) {
-          if (!field.selectionSet || field.selectionSet?.selections.length === 0) {
+        if (
+          currentPath.length === segments.length - 1 &&
+          currentPath.every((v, i) => v === segments[i])
+        ) {
+          if (
+            !field.selectionSet ||
+            field.selectionSet?.selections.length === 0
+          ) {
             fieldWithEmptySelectionSetLoc = field.loc;
           }
         }
@@ -565,7 +617,7 @@ ${operation} ${operationDefinition.name?.value} {}`,
   if (fieldWithEmptySelectionSetLoc) {
     printedQuery =
       printedQuery.slice(0, fieldWithEmptySelectionSetLoc.end) +
-      ' {}' +
+      " {}" +
       printedQuery.slice(fieldWithEmptySelectionSetLoc.end);
   }
 
@@ -579,9 +631,14 @@ export function addArgToField(
   path: string,
   argName: string,
   schema: GraphQLSchema,
-  operationName?: string,
+  operationName?: string
 ) {
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  query = healQuery(query);
+
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let doc: DocumentNode | undefined;
 
@@ -590,27 +647,72 @@ export function addArgToField(
   } catch {}
 
   if (!doc) {
-    return {
-      query,
+    doc = {
+      kind: Kind.DOCUMENT,
+      definitions: [
+        {
+          kind: Kind.OPERATION_DEFINITION,
+          operation,
+          name: {
+            kind: Kind.NAME,
+            value: `New${capitalize(operation)}`,
+          },
+          selectionSet: {
+            kind: Kind.SELECTION_SET,
+            selections: [],
+          },
+        },
+      ],
     };
   }
 
-  let operationDefinition: OperationDefinitionNode = doc.definitions.find((v) => {
-    if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
-      if (operationName) {
-        return v.name?.value === operationName;
+  let operationDefinition: OperationDefinitionNode = doc.definitions.find(
+    (v) => {
+      if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
+        if (operationName) {
+          return v.name?.value === operationName;
+        }
+
+        return true;
       }
 
-      return true;
+      return false;
     }
-
-    return false;
-  }) as OperationDefinitionNode;
+  ) as OperationDefinitionNode;
 
   if (!operationDefinition) {
-    return {
-      query,
+    operationDefinition = {
+      kind: Kind.OPERATION_DEFINITION,
+      operation: operation,
+      name: {
+        kind: Kind.NAME,
+        value: `New${capitalize(operation)}`,
+      },
+      selectionSet: {
+        kind: Kind.SELECTION_SET,
+        selections: [],
+      },
     };
+
+    (doc.definitions as DefinitionNode[]).push(operationDefinition);
+  }
+
+  query = print(doc);
+
+  if (!isFieldInQuery(query, path, operationName)) {
+    doc = parse(addFieldToQuery(query, path, schema, operationName).query);
+
+    operationDefinition = doc.definitions.find((v) => {
+      if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
+        if (operationName) {
+          return v.name?.value === operationName;
+        }
+
+        return true;
+      }
+
+      return false;
+    }) as OperationDefinitionNode;
   }
 
   let currentPath: string[] = [];
@@ -625,11 +727,17 @@ export function addArgToField(
       enter(field) {
         currentPath.push(field.name.value);
 
-        if (currentPath.length === segments.length - 1 && currentPath.every((v, i) => v === segments[i])) {
+        if (
+          currentPath.length === segments.length - 1 &&
+          currentPath.every((v, i) => v === segments[i])
+        ) {
           const fieldName = segments[currentPath.length];
 
           if (field.selectionSet) {
-            const typeField = findFieldInSchema([operation, ...currentPath, fieldName].join('.'), schema);
+            const typeField = findFieldInSchema(
+              [operation, ...currentPath, fieldName].join("."),
+              schema
+            );
 
             if (typeField && typeField.args) {
               const arg = typeField.args.find((v) => v.name === argName);
@@ -645,15 +753,17 @@ export function addArgToField(
                 let i = 2;
 
                 while (
-                  (operationDefinition.variableDefinitions as VariableDefinitionNode[]).find(
-                    (v) => v.variable.name.value === variableName,
-                  )
+                  (
+                    operationDefinition.variableDefinitions as VariableDefinitionNode[]
+                  ).find((v) => v.variable.name.value === variableName)
                 ) {
                   variableName = arg.name + i;
                   ++i;
                 }
 
-                (operationDefinition.variableDefinitions as VariableDefinitionNode[]).push({
+                (
+                  operationDefinition.variableDefinitions as VariableDefinitionNode[]
+                ).push({
                   kind: Kind.VARIABLE_DEFINITION,
                   variable: {
                     kind: Kind.VARIABLE,
@@ -676,9 +786,11 @@ export function addArgToField(
                   type: arg.type.toString(),
                 });
 
-                const fieldNode: FieldNode = field.selectionSet.selections.find((v) => {
-                  return v.kind === Kind.FIELD && v.name.value === fieldName;
-                }) as FieldNode;
+                const fieldNode: FieldNode = field.selectionSet.selections.find(
+                  (v) => {
+                    return v.kind === Kind.FIELD && v.name.value === fieldName;
+                  }
+                ) as FieldNode;
 
                 if (fieldNode) {
                   if (!fieldNode.arguments) {
@@ -717,7 +829,10 @@ export function addArgToField(
           const fieldName = segments[0];
 
           if (operationDefinition.selectionSet) {
-            const typeField = findFieldInSchema([operation, ...currentPath, fieldName].join('.'), schema);
+            const typeField = findFieldInSchema(
+              [operation, ...currentPath, fieldName].join("."),
+              schema
+            );
 
             if (typeField && typeField.args) {
               const arg = typeField.args.find((v) => v.name === argName);
@@ -733,15 +848,17 @@ export function addArgToField(
                 let i = 2;
 
                 while (
-                  (operationDefinition.variableDefinitions as VariableDefinitionNode[]).find(
-                    (v) => v.variable.name.value === variableName,
-                  )
+                  (
+                    operationDefinition.variableDefinitions as VariableDefinitionNode[]
+                  ).find((v) => v.variable.name.value === variableName)
                 ) {
                   variableName = arg.name + i;
                   ++i;
                 }
 
-                (operationDefinition.variableDefinitions as VariableDefinitionNode[]).push({
+                (
+                  operationDefinition.variableDefinitions as VariableDefinitionNode[]
+                ).push({
                   kind: Kind.VARIABLE_DEFINITION,
                   variable: {
                     kind: Kind.VARIABLE,
@@ -764,9 +881,10 @@ export function addArgToField(
                   type: arg.type.toString(),
                 });
 
-                const fieldNode: FieldNode = operationDefinition.selectionSet.selections.find((v) => {
-                  return v.kind === Kind.FIELD && v.name.value === fieldName;
-                }) as FieldNode;
+                const fieldNode: FieldNode =
+                  operationDefinition.selectionSet.selections.find((v) => {
+                    return v.kind === Kind.FIELD && v.name.value === fieldName;
+                  }) as FieldNode;
 
                 if (fieldNode) {
                   if (!fieldNode.arguments) {
@@ -804,10 +922,18 @@ export function addArgToField(
   };
 }
 
-export function removeArgFromField(query: string, path: string, argName: string, operationName?: string) {
+export function removeArgFromField(
+  query: string,
+  path: string,
+  argName: string,
+  operationName?: string
+) {
   query = healQuery(query);
 
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let doc: DocumentNode | undefined;
 
@@ -821,17 +947,19 @@ export function removeArgFromField(query: string, path: string, argName: string,
     };
   }
 
-  let operationDefinition: OperationDefinitionNode = doc.definitions.find((v) => {
-    if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
-      if (operationName) {
-        return v.name?.value === operationName;
+  let operationDefinition: OperationDefinitionNode = doc.definitions.find(
+    (v) => {
+      if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
+        if (operationName) {
+          return v.name?.value === operationName;
+        }
+
+        return true;
       }
 
-      return true;
+      return false;
     }
-
-    return false;
-  }) as OperationDefinitionNode;
+  ) as OperationDefinitionNode;
 
   if (!operationDefinition) {
     return {
@@ -846,13 +974,18 @@ export function removeArgFromField(query: string, path: string, argName: string,
       enter(field) {
         currentPath.push(field.name.value);
 
-        if (currentPath.length === segments.length - 1 && currentPath.every((v, i) => v === segments[i])) {
+        if (
+          currentPath.length === segments.length - 1 &&
+          currentPath.every((v, i) => v === segments[i])
+        ) {
           const fieldName = segments[currentPath.length];
 
           if (field.selectionSet) {
-            const fieldNode: FieldNode = field.selectionSet.selections.find((v) => {
-              return v.kind === Kind.FIELD && v.name.value === fieldName;
-            }) as FieldNode;
+            const fieldNode: FieldNode = field.selectionSet.selections.find(
+              (v) => {
+                return v.kind === Kind.FIELD && v.name.value === fieldName;
+              }
+            ) as FieldNode;
 
             if (fieldNode && fieldNode.arguments) {
               // @ts-ignore
@@ -873,9 +1006,10 @@ export function removeArgFromField(query: string, path: string, argName: string,
           const fieldName = segments[0];
 
           if (operationDefinition.selectionSet) {
-            const fieldNode: FieldNode = operationDefinition.selectionSet.selections.find((v) => {
-              return v.kind === Kind.FIELD && v.name.value === fieldName;
-            }) as FieldNode;
+            const fieldNode: FieldNode =
+              operationDefinition.selectionSet.selections.find((v) => {
+                return v.kind === Kind.FIELD && v.name.value === fieldName;
+              }) as FieldNode;
 
             if (fieldNode && fieldNode.arguments) {
               // @ts-ignore
@@ -894,10 +1028,17 @@ export function removeArgFromField(query: string, path: string, argName: string,
   };
 }
 
-export function isFieldInQuery(query: string, path: string, operationName?: string) {
+export function isFieldInQuery(
+  query: string,
+  path: string,
+  operationName?: string
+) {
   query = healQuery(query);
 
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let doc: DocumentNode | undefined;
 
@@ -909,17 +1050,19 @@ export function isFieldInQuery(query: string, path: string, operationName?: stri
     return false;
   }
 
-  let operationDefinition: OperationDefinitionNode = doc.definitions.find((v) => {
-    if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
-      if (operationName) {
-        return v.name?.value === operationName;
+  let operationDefinition: OperationDefinitionNode = doc.definitions.find(
+    (v) => {
+      if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
+        if (operationName) {
+          return v.name?.value === operationName;
+        }
+
+        return true;
       }
 
-      return true;
+      return false;
     }
-
-    return false;
-  }) as OperationDefinitionNode;
+  ) as OperationDefinitionNode;
 
   if (!operationDefinition) {
     return false;
@@ -938,7 +1081,10 @@ export function isFieldInQuery(query: string, path: string, operationName?: stri
       enter(field) {
         currentPath.push(field.name.value);
 
-        if (currentPath.length === segments.length && currentPath.every((v, i) => v === segments[i])) {
+        if (
+          currentPath.length === segments.length &&
+          currentPath.every((v, i) => v === segments[i])
+        ) {
           found = true;
           return false;
         }
@@ -952,10 +1098,18 @@ export function isFieldInQuery(query: string, path: string, operationName?: stri
   return found;
 }
 
-export function isArgInQuery(query: string, path: string, argName: string, operationName?: string) {
+export function isArgInQuery(
+  query: string,
+  path: string,
+  argName: string,
+  operationName?: string
+) {
   query = healQuery(query);
 
-  const [operation, ...segments] = path.split('.') as [OperationTypeNode, ...string[]];
+  const [operation, ...segments] = path.split(".") as [
+    OperationTypeNode,
+    ...string[]
+  ];
 
   let doc: DocumentNode | undefined;
 
@@ -967,17 +1121,19 @@ export function isArgInQuery(query: string, path: string, argName: string, opera
     return false;
   }
 
-  let operationDefinition: OperationDefinitionNode = doc.definitions.find((v) => {
-    if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
-      if (operationName) {
-        return v.name?.value === operationName;
+  let operationDefinition: OperationDefinitionNode = doc.definitions.find(
+    (v) => {
+      if (v.kind === Kind.OPERATION_DEFINITION && v.operation === operation) {
+        if (operationName) {
+          return v.name?.value === operationName;
+        }
+
+        return true;
       }
 
-      return true;
+      return false;
     }
-
-    return false;
-  }) as OperationDefinitionNode;
+  ) as OperationDefinitionNode;
 
   if (!operationDefinition) {
     return false;
@@ -992,7 +1148,10 @@ export function isArgInQuery(query: string, path: string, argName: string, opera
       enter(field) {
         currentPath.push(field.name.value);
 
-        if (currentPath.length === segments.length && currentPath.every((v, i) => v === segments[i])) {
+        if (
+          currentPath.length === segments.length &&
+          currentPath.every((v, i) => v === segments[i])
+        ) {
           if (field.arguments) {
             found = field.arguments.some((v) => v.name.value === argName);
           }
@@ -1007,7 +1166,12 @@ export function isArgInQuery(query: string, path: string, argName: string, opera
   return found;
 }
 
-export function addAllTypeFieldsToQuery(query: string, path: string, schema: GraphQLSchema, operationName?: string) {
+export function addAllTypeFieldsToQuery(
+  query: string,
+  path: string,
+  schema: GraphQLSchema,
+  operationName?: string
+) {
   const type = findFieldTypeInSchema(path, schema) as GraphQLObjectType;
   const fields = type.getFields();
 
@@ -1017,7 +1181,12 @@ export function addAllTypeFieldsToQuery(query: string, path: string, schema: Gra
   }[] = [];
 
   for (const field of Object.values(fields)) {
-    const result = addFieldToQuery(query, path + '.' + field.name, schema, operationName);
+    const result = addFieldToQuery(
+      query,
+      path + "." + field.name,
+      schema,
+      operationName
+    );
 
     query = result.query;
 
@@ -1038,7 +1207,7 @@ export function addAllTypeFieldsToQueryRecursively(
   schema: GraphQLSchema,
   operationName?: string,
   level = 0,
-  visited: string[] = [],
+  visited: string[] = []
 ) {
   if (level > 5) {
     return {
@@ -1054,7 +1223,7 @@ export function addAllTypeFieldsToQueryRecursively(
     type: string;
   }[] = [];
 
-  if (!type || !('getFields' in type)) {
+  if (!type || !("getFields" in type)) {
     return {
       query,
       variables,
@@ -1073,7 +1242,12 @@ export function addAllTypeFieldsToQueryRecursively(
   const fields = type.getFields();
 
   for (const field of Object.values(fields)) {
-    const result = addFieldToQuery(query, path + '.' + field.name, schema, operationName);
+    const result = addFieldToQuery(
+      query,
+      path + "." + field.name,
+      schema,
+      operationName
+    );
 
     query = result.query;
 
@@ -1083,11 +1257,11 @@ export function addAllTypeFieldsToQueryRecursively(
 
     const result2 = addAllTypeFieldsToQueryRecursively(
       query,
-      path + '.' + field.name,
+      path + "." + field.name,
       schema,
       operationName,
       level + 1,
-      visited,
+      visited
     );
 
     query = result2.query;
@@ -1107,7 +1281,7 @@ export function addAllScalarTypeFieldsToQuery(
   query: string,
   path: string,
   schema: GraphQLSchema,
-  operationName?: string,
+  operationName?: string
 ) {
   const type = findFieldTypeInSchema(path, schema) as GraphQLObjectType;
   const fields = type.getFields();
@@ -1119,7 +1293,12 @@ export function addAllScalarTypeFieldsToQuery(
 
   for (const field of Object.values(fields)) {
     if (extractOfType(field.type) instanceof GraphQLScalarType) {
-      const result = addFieldToQuery(query, path + '.' + field.name, schema, operationName);
+      const result = addFieldToQuery(
+        query,
+        path + "." + field.name,
+        schema,
+        operationName
+      );
 
       query = result.query;
 
@@ -1135,16 +1314,21 @@ export function addAllScalarTypeFieldsToQuery(
   };
 }
 
-export function areAllTypeFieldsInQuery(query: string, path: string, schema: GraphQLSchema, operationName?: string) {
+export function areAllTypeFieldsInQuery(
+  query: string,
+  path: string,
+  schema: GraphQLSchema,
+  operationName?: string
+) {
   if (!path) {
     return false;
   }
 
   const type = findFieldTypeInSchema(path, schema) as GraphQLObjectType;
-  const fields = type.getFields();
+  const fields = type.getFields?.() || {};
 
   for (const field of Object.values(fields)) {
-    if (!isFieldInQuery(query, path + '.' + field.name, operationName)) {
+    if (!isFieldInQuery(query, path + "." + field.name, operationName)) {
       return false;
     }
   }
@@ -1152,12 +1336,21 @@ export function areAllTypeFieldsInQuery(query: string, path: string, schema: Gra
   return true;
 }
 
-export function removeTypeFieldsFromQuery(query: string, path: string, schema: GraphQLSchema, operationName?: string) {
+export function removeTypeFieldsFromQuery(
+  query: string,
+  path: string,
+  schema: GraphQLSchema,
+  operationName?: string
+) {
   const type = findFieldTypeInSchema(path, schema) as GraphQLObjectType;
   const fields = type.getFields();
 
   for (const field of Object.values(fields)) {
-    query = removeFieldFromQuery(query, path + '.' + field.name, operationName).query;
+    query = removeFieldFromQuery(
+      query,
+      path + "." + field.name,
+      operationName
+    ).query;
   }
 
   return query;

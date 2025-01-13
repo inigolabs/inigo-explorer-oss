@@ -807,198 +807,198 @@ function ExplorerSidebarDocs(props: ExplorerSidebarProps) {
           })}
         </div>
       )}
-      {objectType && (
-        <div className={styles.subtitle}>
-          Fields
-          <Tooltip
-            text={ExplorerSidebarSortingNextLabel[sorting]}
-            popupStyle={{ padding: "var(--gutter-extra-small)" }}
-            position={TooltipPosition.Top}
-          >
-            <NewButton
-              size={ButtonSize.Small}
-              icon
-              onClick={updateSorting}
-              disabled={!docsPath}
+      {!!objectType && !!objectType.fields?.length && (
+        <>
+          <div className={styles.subtitle}>
+            Fields
+            <Tooltip
+              text={ExplorerSidebarSortingNextLabel[sorting]}
+              popupStyle={{ padding: "var(--gutter-extra-small)" }}
+              position={TooltipPosition.Top}
             >
-              <Icon icon={<IconSortingArrows />} size={16} />
-            </NewButton>
-          </Tooltip>
-          <div className={styles.actions}>
-            <div className={styles.mainContainer}>
-              {areAllTypeFieldsInQuery(
-                props.tab?.query as string,
-                docsPath as string,
-                clientSchema!,
-                props.selectedOperationName
-              ) ? (
-                <NewButton
-                  className={styles.main}
-                  onClick={() => {
-                    props.onTabUpdate?.((prev) => {
-                      return {
-                        ...prev,
-                        query: removeTypeFieldsFromQuery(
-                          props.tab?.query as string,
-                          docsPath as string,
-                          clientSchema!,
-                          props.selectedOperationName
-                        ),
-                      };
-                    });
-                  }}
-                  icon
-                  size={ButtonSize.Small}
-                  disabled={!docsPath}
-                >
-                  <Icon icon={<IconCheckCircle />} size={16} />
-                </NewButton>
-              ) : (
-                <Tooltip
-                  renderContent={() => (
-                    <span style={{ wordBreak: "normal" }}>
-                      Click to add all fields (⌘ + Click to add all fields
-                      recursively)
-                    </span>
-                  )}
-                  position={TooltipPosition.Top}
-                  popupStyle={{ padding: "var(--gutter-extra-small)" }}
-                >
+              <NewButton
+                size={ButtonSize.Small}
+                icon
+                onClick={updateSorting}
+                disabled={!docsPath}
+              >
+                <Icon icon={<IconSortingArrows />} size={16} />
+              </NewButton>
+            </Tooltip>
+            <div className={styles.actions}>
+              <div className={styles.mainContainer}>
+                {areAllTypeFieldsInQuery(
+                  props.tab?.query as string,
+                  docsPath as string,
+                  clientSchema!,
+                  props.selectedOperationName
+                ) ? (
                   <NewButton
                     className={styles.main}
-                    onClick={(e) => {
-                      let result: {
-                        query: string;
-                        variables?: { name: string; type: string }[];
-                      } | null = null;
-
-                      if (e.metaKey) {
-                        result = addAllTypeFieldsToQueryRecursively(
-                          props.tab?.query as string,
-                          docsPath as string,
-                          clientSchema!,
-                          props.selectedOperationName
-                        );
-                      } else {
-                        result = addAllTypeFieldsToQuery(
-                          props.tab?.query as string,
-                          docsPath as string,
-                          clientSchema!,
-                          props.selectedOperationName
-                        );
-                      }
-
-                      if (result) {
-                        props.onTabUpdate?.((prev) => {
-                          let variables = prev.variables
-                            ? JSON.parse(prev.variables)
-                            : {};
-
-                          if (result!.variables) {
-                            for (let arg of result!.variables) {
-                              variables[arg.name] = inputTypeToJsonMock(
-                                typeStringToIntrospectionTypeRef(arg.type)
-                              );
-                            }
-                          }
-
-                          return {
-                            ...prev,
-                            query: result!.query,
-                            variables: JSON.stringify(variables, null, 2),
-                          };
-                        });
-                      }
+                    onClick={() => {
+                      props.onTabUpdate?.((prev) => {
+                        return {
+                          ...prev,
+                          query: removeTypeFieldsFromQuery(
+                            props.tab?.query as string,
+                            docsPath as string,
+                            clientSchema!,
+                            props.selectedOperationName
+                          ),
+                        };
+                      });
                     }}
                     icon
                     size={ButtonSize.Small}
                     disabled={!docsPath}
                   >
-                    <Icon icon={<AddCircle />} size={16} />
+                    <Icon icon={<IconCheckCircle />} size={16} />
                   </NewButton>
-                </Tooltip>
-              )}
-            </div>
-            <Menu
-              className={styles.moreContainer}
-              target={
-                <NewButton
-                  className={styles.more}
-                  icon
-                  size={ButtonSize.Small}
-                  disabled={!docsPath}
-                >
-                  <Icon icon={<More />} size={16} />
-                </NewButton>
-              }
-              placement="left"
-              minWidth={125}
-              onSelect={(value: any) => {
-                let result: {
-                  query: string;
-                  variables?: { name: string; type: string }[];
-                } | null = null;
+                ) : (
+                  <Tooltip
+                    renderContent={() => (
+                      <span style={{ wordBreak: "normal" }}>
+                        Click to add all fields (⌘ + Click to add all fields
+                        recursively)
+                      </span>
+                    )}
+                    position={TooltipPosition.Top}
+                    popupStyle={{ padding: "var(--gutter-extra-small)" }}
+                  >
+                    <NewButton
+                      className={styles.main}
+                      onClick={(e) => {
+                        let result: {
+                          query: string;
+                          variables?: { name: string; type: string }[];
+                        } | null = null;
 
-                if (value === "scalars") {
-                  result = addAllScalarTypeFieldsToQuery(
-                    props.tab?.query as string,
-                    docsPath as string,
-                    clientSchema!,
-                    props.selectedOperationName
-                  );
+                        if (e.metaKey) {
+                          result = addAllTypeFieldsToQueryRecursively(
+                            props.tab?.query as string,
+                            docsPath as string,
+                            clientSchema!,
+                            props.selectedOperationName
+                          );
+                        } else {
+                          result = addAllTypeFieldsToQuery(
+                            props.tab?.query as string,
+                            docsPath as string,
+                            clientSchema!,
+                            props.selectedOperationName
+                          );
+                        }
+
+                        if (result) {
+                          props.onTabUpdate?.((prev) => {
+                            let variables = prev.variables
+                              ? JSON.parse(prev.variables)
+                              : {};
+
+                            if (result!.variables) {
+                              for (let arg of result!.variables) {
+                                variables[arg.name] = inputTypeToJsonMock(
+                                  typeStringToIntrospectionTypeRef(arg.type)
+                                );
+                              }
+                            }
+
+                            return {
+                              ...prev,
+                              query: result!.query,
+                              variables: JSON.stringify(variables, null, 2),
+                            };
+                          });
+                        }
+                      }}
+                      icon
+                      size={ButtonSize.Small}
+                      disabled={!docsPath}
+                    >
+                      <Icon icon={<AddCircle />} size={16} />
+                    </NewButton>
+                  </Tooltip>
+                )}
+              </div>
+              <Menu
+                className={styles.moreContainer}
+                target={
+                  <NewButton
+                    className={styles.more}
+                    icon
+                    size={ButtonSize.Small}
+                    disabled={!docsPath}
+                  >
+                    <Icon icon={<More />} size={16} />
+                  </NewButton>
                 }
+                placement="left"
+                minWidth={125}
+                onSelect={(value: any) => {
+                  let result: {
+                    query: string;
+                    variables?: { name: string; type: string }[];
+                  } | null = null;
 
-                if (value === "recursively") {
-                  result = addAllTypeFieldsToQueryRecursively(
-                    props.tab?.query as string,
-                    docsPath as string,
-                    clientSchema!,
-                    props.selectedOperationName
-                  );
-                }
+                  if (value === "scalars") {
+                    result = addAllScalarTypeFieldsToQuery(
+                      props.tab?.query as string,
+                      docsPath as string,
+                      clientSchema!,
+                      props.selectedOperationName
+                    );
+                  }
 
-                if (result) {
-                  props.onTabUpdate?.((prev) => {
-                    let variables = prev.variables
-                      ? JSON.parse(prev.variables)
-                      : {};
+                  if (value === "recursively") {
+                    result = addAllTypeFieldsToQueryRecursively(
+                      props.tab?.query as string,
+                      docsPath as string,
+                      clientSchema!,
+                      props.selectedOperationName
+                    );
+                  }
 
-                    if (result!.variables) {
-                      for (let arg of result!.variables) {
-                        variables[arg.name] = inputTypeToJsonMock(
-                          typeStringToIntrospectionTypeRef(arg.type)
-                        );
+                  if (result) {
+                    props.onTabUpdate?.((prev) => {
+                      let variables = prev.variables
+                        ? JSON.parse(prev.variables)
+                        : {};
+
+                      if (result!.variables) {
+                        for (let arg of result!.variables) {
+                          variables[arg.name] = inputTypeToJsonMock(
+                            typeStringToIntrospectionTypeRef(arg.type)
+                          );
+                        }
                       }
-                    }
 
-                    return {
-                      ...prev,
-                      query: result!.query,
-                      variables: JSON.stringify(variables, null, 2),
-                    };
-                  });
-                }
-              }}
-            >
-              <MenuOption className={styles.option} value="scalars">
-                Select all scalar fields
-              </MenuOption>
-              <MenuOption className={styles.option} value="recursively">
-                Select all fields recursively (up to 6 levels)
-              </MenuOption>
-            </Menu>
+                      return {
+                        ...prev,
+                        query: result!.query,
+                        variables: JSON.stringify(variables, null, 2),
+                      };
+                    });
+                  }
+                }}
+              >
+                <MenuOption className={styles.option} value="scalars">
+                  Select all scalar fields
+                </MenuOption>
+                <MenuOption className={styles.option} value="recursively">
+                  Select all fields recursively (up to 6 levels)
+                </MenuOption>
+              </Menu>
+            </div>
           </div>
-        </div>
-      )}
-      {objectType && (
-        <TextInput
-          ref={searchInputRef}
-          className={styles.search}
-          prefix={<Icon icon={<IconSearch />} size={16} />}
-          placeholder="Filter"
-          onChange={setSearchValue}
-          clearBtn
-        />
+          <TextInput
+            ref={searchInputRef}
+            className={styles.search}
+            prefix={<Icon icon={<IconSearch />} size={16} />}
+            placeholder="Filter"
+            onChange={setSearchValue}
+            clearBtn
+          />
+        </>
       )}
       {!!objectType ? (
         fieldsToRender.length ? (
@@ -1080,15 +1080,16 @@ function ExplorerSidebarDocs(props: ExplorerSidebarProps) {
                   fieldType = getObjectTypeFieldTypeName(field.type) || "";
                 }
 
-                const isActive =
-                  getObjectTypeFieldKind(field.type) === "OBJECT" ||
-                  fieldType ===
-                    (props.schema?.__schema.queryType?.name ?? "Query") ||
-                  fieldType ===
-                    (props.schema?.__schema.mutationType?.name ?? "Mutation") ||
-                  fieldType ===
-                    (props.schema?.__schema.subscriptionType?.name ??
-                      "Subscription");
+                // const isActive =
+                //   getObjectTypeFieldKind(field.type) === "OBJECT" ||
+                //   fieldType ===
+                //     (props.schema?.__schema.queryType?.name ?? "Query") ||
+                //   fieldType ===
+                //     (props.schema?.__schema.mutationType?.name ?? "Mutation") ||
+                //   fieldType ===
+                //     (props.schema?.__schema.subscriptionType?.name ??
+                //       "Subscription");
+                const isActive = true;
 
                 return (
                   <div className={classNames(styles.field)}>
@@ -1163,9 +1164,9 @@ function ExplorerSidebarDocs(props: ExplorerSidebarProps) {
                 );
               })}
           </div>
-        ) : (
+        ) : searchValue ? (
           <div className={styles.empty}>No results for "{searchValue}"</div>
-        )
+        ) : null
       ) : !props.introspectionLoading ? (
         <div className={styles.error}>
           <img
