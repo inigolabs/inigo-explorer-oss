@@ -56,6 +56,7 @@ import Icon, {
   IconHistory,
   IconInfo,
   IconLocked,
+  IconRefresh,
   IconRestore,
   IconSearch,
   IconSettings,
@@ -141,6 +142,7 @@ export interface ExplorerSidebarProps {
   onProxyEnabledChange?: (proxyEnabled: boolean) => void;
   onHistoryEnabledChange?: (historyEnabled: boolean) => void;
   onUrlRestore?: () => void;
+  onRefetchIntrospection?: () => void;
   onTabUpdate?: (update: (prev: ExplorerTab) => ExplorerTab) => void;
   onTabCreate?: (tab: ExplorerTab) => void;
   onTabActivate?: (id: string) => void;
@@ -638,6 +640,18 @@ function ExplorerSidebarDocs(props: ExplorerSidebarProps) {
         onChange={(value) => {
           props.onUrlChange?.(value);
         }}
+        suffix={
+          <NewButton
+            icon
+            variant={ButtonVariant.Link}
+            onClick={props.onRefetchIntrospection}
+            style={{
+              width: 16,
+            }}
+          >
+            <Icon icon={<IconRefresh />} size={16} />
+          </NewButton>
+        }
       />
       {objectType ? (
         <div className={styles.header}>

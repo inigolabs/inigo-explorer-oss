@@ -1011,6 +1011,7 @@ export default function Explorer(props: ExplorerProps) {
       return;
     }
 
+    setSchema(undefined);
     setIntrospectionLoading(true);
 
     window.clearTimeout(queryIntrospectionTimeoutRef.current);
@@ -2343,6 +2344,7 @@ export default function Explorer(props: ExplorerProps) {
           serviceKey={props.serviceKey}
           theme={props.theme}
           onShowSchemaDrawer={() => setIsDrawerVisible(true)}
+          onRefetchIntrospection={queryIntrospection}
         />
         {activeTab && (
           <div className={styles.tab}>
