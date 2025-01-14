@@ -1927,7 +1927,7 @@ export default function Explorer(props: ExplorerProps) {
           <Schema
             data={formatIntrospectionResponse(schema)}
             theme={props.theme || "light"}
-            compact
+            // compact
             navigationMode="query"
           />
         )}
