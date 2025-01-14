@@ -165,7 +165,7 @@ We welcome contributions to enhance this component. Please follow these steps:
 7. Submit a pull request.
 
 ## FAQ
-* To run the expolere on Next JS, disable server side rendering.
+* To run the Expoler on Next JS, disable server side rendering.
 * create-react-app is deprecated and no longer supported.
 
 ---
