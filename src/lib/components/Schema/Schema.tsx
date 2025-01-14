@@ -745,11 +745,14 @@ const ReferencesListItem = ({
   model,
   isImplements,
   activeService,
+  navigationMode,
 }: ReferenceItem & {
   model: ISchemaPropsModel;
   typeName: string;
   activeService?: Service;
+  navigationMode: "router" | "query";
 }) => {
+  const [_searchParams, setSearchParams] = useSearchParams();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const onButtonClick = useCallback(() => {
@@ -760,6 +763,25 @@ const ReferencesListItem = ({
 
   const nameNode = useMemo(() => {
     if (isImplements) {
+      if (navigationMode === "query") {
+        return (
+          <div
+            className="SelectedTypeReferencesListItemName"
+            onClick={() => {
+              setSearchParams({
+                path: name,
+              });
+            }}
+          >
+            {name}
+            <div className="SelectedTypeReferencesListItemImplements">
+              <span>implements</span>{" "}
+              {renderStringWithSearch(typeName, typeName)}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <Link
           className="SelectedTypeReferencesListItemName"
@@ -788,7 +810,7 @@ const ReferencesListItem = ({
         <div className="SelectedTypeReferencesListItemNameCount">{count}</div>
       </div>
     );
-  }, [isImplements, name, onButtonClick, typeName]);
+  }, [isImplements, name, onButtonClick, typeName, navigationMode]);
 
   return (
     <div
@@ -800,32 +822,55 @@ const ReferencesListItem = ({
       {nameNode}
       <div className="SelectedTypeReferencesListItemWrapper">
         <div className="SelectedTypeReferencesListItemContent">
-          {properties.map((property: any, i) => (
-            <Link
-              key={i}
-              to={`/${serviceToPath(activeService)}/schema/${name}${
-                window.location.search
-              }`}
-            >
-              {renderSelectedTypeProperty(
-                {
-                  ...property,
-                  description: undefined,
-                  index: i,
-                },
-                model,
-                () => {},
-                (str) => {
-                  if (str.includes("(")) {
-                    return str.split("(")[0] === typeName;
-                  }
+          {properties.map((property: any, i) => {
+            const innerNode = renderSelectedTypeProperty(
+              {
+                ...property,
+                description: undefined,
+                index: i,
+              },
+              model,
+              () => {},
+              (str) => {
+                if (str.includes("(")) {
+                  return str.split("(")[0] === typeName;
+                }
 
-                  return str === typeName;
-                },
-                activeService
-              )}
-            </Link>
-          ))}
+                return str === typeName;
+              },
+              activeService,
+              undefined,
+              undefined,
+              false,
+              navigationMode,
+              setSearchParams
+            );
+
+            if (navigationMode === "query") {
+              return (
+                <div
+                  onClick={() => {
+                    setSearchParams({
+                      path: name,
+                    });
+                  }}
+                >
+                  {innerNode}
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={i}
+                to={`/${serviceToPath(activeService)}/schema/${name}${
+                  window.location.search
+                }`}
+              >
+                {innerNode}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -837,11 +882,13 @@ const References = ({
   model,
   type,
   activeService,
+  navigationMode,
 }: {
   typeName: string;
   model: ISchemaPropsModel;
   type: ISchemaPropsItem;
   activeService?: Service;
+  navigationMode: "router" | "query";
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -890,6 +937,7 @@ const References = ({
               typeName={typeName}
               model={model}
               activeService={activeService}
+              navigationMode={navigationMode}
             />
           ))}
         </div>
@@ -922,7 +970,7 @@ export function SelectedType({
   // selectedLineNumbers?: number[];
   // onLineNumberSelectionChange?: (lines: number[]) => void;
   filter?: Record<string, any>;
-  navigationMode?: "router" | "query";
+  navigationMode: "router" | "query";
 }) {
   let prefix = "type";
 
@@ -1029,6 +1077,7 @@ export function SelectedType({
           model={data}
           type={type}
           activeService={activeService}
+          navigationMode={navigationMode}
         />
       )}
       <div className="SelectedTypeInner">
@@ -1093,22 +1142,43 @@ export function SelectedType({
           <div className="SelectedTypeProperty" style={{ paddingLeft: 0 }}>
             {prefix}
             {!!searchValue ? (
-              <NavLink
-                className={classNames(
-                  "Active",
-                  type.type === ISchemaPropsItemType.Scalars && "Scalar"
-                )}
-                to={`/${serviceToPath(activeService)}/schema/${type.name}${
-                  window.location.search
-                }`}
-                onClick={onClick}
-              >
-                {type.type === ISchemaPropsItemType.Directives && "@"}
-                {renderStringWithSearch(
-                  type.name === "inigo.schema" ? "schema" : type.name,
-                  searchValue
-                )}
-              </NavLink>
+              navigationMode === "router" ? (
+                <NavLink
+                  className={classNames(
+                    "Active",
+                    type.type === ISchemaPropsItemType.Scalars && "Scalar"
+                  )}
+                  to={`/${serviceToPath(activeService)}/schema/${type.name}${
+                    window.location.search
+                  }`}
+                  onClick={onClick}
+                >
+                  {type.type === ISchemaPropsItemType.Directives && "@"}
+                  {renderStringWithSearch(
+                    type.name === "inigo.schema" ? "schema" : type.name,
+                    searchValue
+                  )}
+                </NavLink>
+              ) : (
+                <span
+                  className={classNames(
+                    "Active",
+                    type.type === ISchemaPropsItemType.Scalars && "Scalar"
+                  )}
+                  onClick={() => {
+                    setSearchParams({
+                      path: type.name,
+                    });
+                    onClick();
+                  }}
+                >
+                  {type.type === ISchemaPropsItemType.Directives && "@"}
+                  {renderStringWithSearch(
+                    type.name === "inigo.schema" ? "schema" : type.name,
+                    searchValue
+                  )}
+                </span>
+              )
             ) : (
               <span
                 className={classNames(
@@ -1231,7 +1301,8 @@ function renderSearchResults(
   searchValue: string,
   onClick: () => void,
   activeService?: Service,
-  theme?: "dark" | "light"
+  theme?: "dark" | "light",
+  navigationMode?: "router" | "query"
 ) {
   const itemsToRender = items.filter(
     (item) =>
@@ -1346,6 +1417,7 @@ function renderSearchResults(
               onClick={onClick}
               searchValue={searchValue}
               activeService={activeService}
+              navigationMode={navigationMode || "router"}
             />
           </div>
         }
@@ -1383,7 +1455,7 @@ function Schema(props: ISchemaProps) {
   }, [theme]);
 
   const renderSearchResult = useCallback(
-    (search: string) => {
+    (search: string, navigationMode: "router" | "query") => {
       if (props.data && search) {
         let renderedSearchResult = renderedSearchResultsCache[search];
 
@@ -1396,7 +1468,8 @@ function Schema(props: ISchemaProps) {
               setFilter(ISchemaPropsItemType.All);
             },
             activeService,
-            theme
+            theme,
+            navigationMode
           );
 
           setRenderedSearchResultsCache((prev) => ({
@@ -1442,6 +1515,7 @@ function Schema(props: ISchemaProps) {
             // onLineNumberSelectionChange={setSelectedLineNumbers}
             filter={props.filter}
             compact={props.compact}
+            navigationMode="router"
           />
         }
       />
@@ -1612,31 +1686,37 @@ function Schema(props: ISchemaProps) {
       }}
     >
       {props.navigationMode === "query" ? (
-        (path) => {
-          if (!path) {
-            return null;
-          }
+        !!searchValue.length ? (
+          <div className="SearchResult">
+            {renderSearchResult(searchValue, "query")}
+          </div>
+        ) : (
+          (path) => {
+            if (!path) {
+              return null;
+            }
 
-          return (
-            <div className="SelectedType">
-              <SelectedType
-                type={props.data.find((item) => item.name === path)!}
-                data={props.data}
-                onClick={() => {}}
-                activeService={activeService}
-                onServiceClick={onServiceClick}
-                filter={props.filter}
-                compact={props.compact}
-                navigationMode="query"
-              />
-            </div>
-          );
-        }
+            return (
+              <div className="SelectedType">
+                <SelectedType
+                  type={props.data.find((item) => item.name === path)!}
+                  data={props.data}
+                  onClick={() => {}}
+                  activeService={activeService}
+                  onServiceClick={onServiceClick}
+                  filter={props.filter}
+                  compact={props.compact}
+                  navigationMode="query"
+                />
+              </div>
+            );
+          }
+        )
       ) : (
         <>
           {!!searchValue.length && (
             <div className="SearchResult">
-              {renderSearchResult(searchValue)}
+              {renderSearchResult(searchValue, "router")}
             </div>
           )}
           {!searchValue.length && (
