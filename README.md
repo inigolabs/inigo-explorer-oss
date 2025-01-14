@@ -164,6 +164,10 @@ We welcome contributions to enhance this component. Please follow these steps:
 6. Push the branch: `git push origin feature-name`.
 7. Submit a pull request.
 
+## FAQ
+* To run the expolere on Next JS, disable server side rendering.
+* create-react-app is deprecated and no longer supported.
+
 ---
 
 ## License
