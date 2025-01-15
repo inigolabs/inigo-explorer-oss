@@ -4,9 +4,18 @@ This repository contains an open-source **GraphQL Explorer Component** for React
 
 ## Features
 
-- **GraphQL Querying**: Supports dynamic queries, variables, and headers.
-- **Tabs and History**: Manage multiple tabs and retain history for quick reference.
-- **Collections**: Save and organize reusable queries.
+The GraphQL Explorer is designed with developers in mind, offering features that simplify workflows and enhance productivity. Here’s what it includes:
+
+- **Query Builder:** Construct complex GraphQL queries with an easy-to-use interface.
+- **History:** Quickly access and reuse previous queries.
+- **Saved Collections:** Keep your frequently used queries organized and ready.
+- **Define Extension Headers:** Customize and add extension headers to your GraphQL requests for advanced use cases.
+- **Share Queries:** Share queries with others, whether or not they include variables.
+- **Multi-Tab Support:** Work on multiple queries simultaneously for better multitasking.
+- **Run 10x Options:** Send multiple queries at once to test performance and scalability.
+- **Response Viewer with Headers:** Debug effectively with detailed response and header insights.
+- **Schema Viewer:** Navigate and explore your schema with a visual overview.
+- **PreFlight Scripts:** Set up login or other pre-configurations before running queries.
 - **Local Preferences**: Save and retrieve user preferences, such as layout and active tabs.
 
 ---
