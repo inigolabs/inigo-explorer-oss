@@ -138,7 +138,7 @@ function Menu(props: IMenuProps) {
         <div className="OptionsFooter" tabIndex={1}>
           <div className="OptionsFooterActions">
             <Button
-              label="Clear"
+              label="Cancel"
               type="link"
               onClick={(ev) => {
                 ev.currentTarget.blur();
