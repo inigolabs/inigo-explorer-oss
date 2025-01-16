@@ -919,6 +919,7 @@ export default function Explorer(props: ExplorerProps) {
             variables: body.variables,
             extensions: body.extensions,
             operationName: body.operationName,
+            headers: options.headers,
             proxyEnabled,
             fetcherUrl,
           });
