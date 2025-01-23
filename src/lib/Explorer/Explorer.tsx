@@ -2287,6 +2287,7 @@ export default function Explorer(props: ExplorerProps) {
           tab={activeTab}
           history={history}
           tabs={tabs}
+          access={props.access === "user" ? "user" : "admin"}
           cursorPosition={queryCursorPosition}
           deleteHistory={deleteHistory}
           deleteHistoryItem={deleteHistoryItem}
