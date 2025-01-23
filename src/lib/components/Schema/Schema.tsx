@@ -341,6 +341,12 @@ const Tags = ({
                               toLowerCase(subService.name) === lowerCasedValue
                           );
 
+                          const valueToRender = Array.isArray(
+                            t.details[key].Value.Value
+                          )
+                            ? t.details[key].Value.Value.join(", ")
+                            : t.details[key].Value.Value;
+
                           if (key === "graph" && service) {
                             return (
                               <div key={key} className="TagTooltip">
@@ -349,14 +355,14 @@ const Tags = ({
                                   style={{ cursor: "pointer" }}
                                   onClick={() => onServiceClick?.(service!)}
                                 >
-                                  {t.details[key].Value.Value}
+                                  {valueToRender}
                                 </span>
                               </div>
                             );
                           }
                           return (
                             <div key={key} className="TagTooltip">
-                              <span>{key}</span>: {t.details[key].Value.Value}
+                              <span>{key}</span>: {valueToRender}
                             </div>
                           );
                         })}
