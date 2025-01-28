@@ -87,8 +87,8 @@ function Option(props: IOptionProps) {
           props.onClick?.(value);
 
           if (props.type === "button") {
+            (document.activeElement as HTMLElement)?.blur();
           }
-          (document.activeElement as HTMLElement)?.blur();
         }}
       >
         {props.type !== "button" && (
