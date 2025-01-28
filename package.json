@@ -1,7 +1,7 @@
 {
   "name": "@inigolabs/graphql-explorer",
   "private": false,
-  "version": "0.0.11",
+  "version": "0.0.12",
   "type": "module",
   "description": "A GraphQL Explorer for your API",
   "main": "dist/index.umd.js",
