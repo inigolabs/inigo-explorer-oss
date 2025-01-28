@@ -1,6 +1,13 @@
 import "./Schema.scss";
 import classNames from "classnames";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ISchemaProps,
   ISchemaPropsItem,
@@ -10,7 +17,7 @@ import {
   ISchemaPropsModel,
 } from "./Schema.types";
 import Tooltip, { TooltipPosition } from "../Tooltip/Tooltip";
-import { lowerCase, escapeRegExp } from "lodash";
+import { lowerCase, escapeRegExp, set } from "lodash";
 import Select, { Option as SelectOption } from "../Select/Select";
 import Drawer from "../Drawer/Drawer";
 import {
@@ -23,11 +30,21 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import Icon, { ArrowDown, ArrowRight, IconGraph } from "../Icon/Icon";
+import Icon, {
+  ArrowDown,
+  ArrowRight,
+  IconGraph,
+  IconShare,
+} from "../Icon/Icon";
 import { serviceToFullPath, serviceToPath } from "../../utils/helpers";
 import Button, { ButtonSize } from "../Buttons/Button";
 import { LayoutWithNavigation } from "../LayoutWithNavigation/LayoutWithNavigation";
-import { getQueryParamByName } from "../../utils/queryParams";
+import {
+  getQueryParamByName,
+  updateQueryParamByName,
+} from "../../utils/queryParams";
+import { message } from "../MessagesWrapper/MessagesWrapper.utils";
+import { MessageType } from "../MessagesWrapper/MessagesWrapper.types";
 
 const toLowerCase = (str?: string) => lowerCase(str).replace(/\s/g, "");
 
@@ -584,28 +601,32 @@ function renderSelectedTypeProperty(
   onServiceClick?: (service: Service) => void,
   typeName?: string,
   showAnalytics = true,
-  // selectedLineNumbers?: number[],
+  selectedLineNumbers?: number[],
   navigationMode?: "router" | "query",
   setSearchParams?: (params: Record<string, string>) => void
 ) {
-  // const isLineSelected = selectedLineNumbers?.includes(property.index + 2);
+  const isLineSelected = selectedLineNumbers?.includes(property.index + 2);
 
   return (
     <>
       {property.description && (
         <div
           className={classNames("SelectedTypePropertyDescription", {
-            // Selected: isLineSelected,
+            Selected: isLineSelected,
           })}
           key={`${property.name}__desc`}
         >
+          """
+          <br />
           {property.description}
+          <br />
+          """
         </div>
       )}
       <div
         className={classNames(
-          "SelectedTypeProperty"
-          // isLineSelected && "Selected"
+          "SelectedTypeProperty",
+          isLineSelected && "Selected"
         )}
         key={property.name}
       >
@@ -685,7 +706,11 @@ function renderSelectedEnumProperty(
           className="SelectedTypePropertyDescription"
           key={`${property.name}__desc`}
         >
+          """
+          <br />
           {property.description}
+          <br />
+          """
         </div>
       )}
       <div className="SelectedTypeProperty" key={property.name}>
@@ -848,6 +873,7 @@ const ReferencesListItem = ({
               undefined,
               undefined,
               false,
+              [],
               navigationMode,
               setSearchParams
             );
@@ -894,6 +920,7 @@ const References = ({
   model: ISchemaPropsModel;
   type: ISchemaPropsItem;
   activeService?: Service;
+  selectedLineNumbers?: number[];
   navigationMode: "router" | "query";
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -961,8 +988,8 @@ export function SelectedType({
   activeService,
   onServiceClick,
   compact,
-  // selectedLineNumbers,
-  // onLineNumberSelectionChange,
+  selectedLineNumbers,
+  onLineNumberSelectionChange,
   filter,
   navigationMode,
 }: {
@@ -973,8 +1000,8 @@ export function SelectedType({
   activeService?: Service;
   onServiceClick?: (service: Service) => void;
   compact?: boolean;
-  // selectedLineNumbers?: number[];
-  // onLineNumberSelectionChange?: (lines: number[]) => void;
+  selectedLineNumbers?: number[];
+  onLineNumberSelectionChange?: (lines: number[]) => void;
   filter?: Record<string, any>;
   navigationMode: "router" | "query";
 }) {
@@ -1009,68 +1036,58 @@ export function SelectedType({
   }
 
   const hasProperties = type.properties?.length > 0;
-  const propertiesToRender = filter?.role
-    ? type.properties?.filter((property) => {
-        const accessTag = property.tags?.find((tag) => tag.key === "access");
-
-        if (!accessTag) {
-          return true;
-        }
-
-        return accessTag.details?.role?.Value?.Value?.includes(filter.role);
-      })
-    : type.properties;
+  const propertiesToRender = type.properties ?? [];
 
   // const initialY = useRef(0);
-  // const linesCount = propertiesToRender.length + 2;
+  const linesCount = propertiesToRender.length + 2;
 
-  // const onMouseDown = useCallback(
-  //   (e: React.MouseEvent<HTMLDivElement>, line: number) => {
-  //     if (!onLineNumberSelectionChange) {
-  //       return;
-  //     }
-  //     if (line === 0 || line === propertiesToRender.length + 1) {
-  //       return;
-  //     }
-  //     onLineNumberSelectionChange([line]);
-  //     initialY.current = e.clientY;
-  //     function onMouseMove(e: MouseEvent) {
-  //       const diffY = e.clientY - initialY.current;
-  //       const itemsSelected = Math.floor(diffY / 28);
-  //       onLineNumberSelectionChange!(
-  //         new Array(Math.abs(itemsSelected) + 1)
-  //           .fill(0)
-  //           .map((_, i) => {
-  //             if (itemsSelected < 0) {
-  //               return line - i;
-  //             }
-  //             return line + i;
-  //           })
-  //           .filter((l) => l > 0 && l <= linesCount)
-  //       );
-  //     }
-  //     function onMouseUp() {
-  //       window.removeEventListener("mousemove", onMouseMove);
-  //       window.removeEventListener("mouseup", onMouseUp);
-  //     }
-  //     window.addEventListener("mousemove", onMouseMove);
-  //     window.addEventListener("mouseup", onMouseUp);
-  //     return () => {
-  //       window.removeEventListener("mousemove", onMouseMove);
-  //       window.removeEventListener("mouseup", onMouseUp);
-  //     };
-  //   },
-  //   [onLineNumberSelectionChange, linesCount]
-  // );
+  const onMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>, line: number) => {
+      if (!onLineNumberSelectionChange) {
+        return;
+      }
+      if (line === 1 || line === propertiesToRender.length + 1) {
+        return;
+      }
+      onLineNumberSelectionChange([line]);
+      // initialY.current = e.clientY;
+      // function onMouseMove(e: MouseEvent) {
+      //   const diffY = e.clientY - initialY.current;
+      //   const itemsSelected = Math.floor(diffY / 28);
+      //   onLineNumberSelectionChange!(
+      //     new Array(Math.abs(itemsSelected) + 1)
+      //       .fill(0)
+      //       .map((_, i) => {
+      //         if (itemsSelected < 0) {
+      //           return line - i;
+      //         }
+      //         return line + i;
+      //       })
+      //       .filter((l) => l > 0 && l <= linesCount)
+      //   );
+      // }
+      // function onMouseUp() {
+      //   window.removeEventListener("mousemove", onMouseMove);
+      //   window.removeEventListener("mouseup", onMouseUp);
+      // }
+      // window.addEventListener("mousemove", onMouseMove);
+      // window.addEventListener("mouseup", onMouseUp);
+      // return () => {
+      //   window.removeEventListener("mousemove", onMouseMove);
+      //   window.removeEventListener("mouseup", onMouseUp);
+      // };
+    },
+    [onLineNumberSelectionChange, linesCount]
+  );
 
-  // const copyShareableLink = () => {
-  //   navigator.clipboard.writeText(window.location.href);
+  const copyShareableLink = () => {
+    navigator.clipboard.writeText(window.location.href);
 
-  //   message({
-  //     type: MessageType.Success,
-  //     text: "Link copied to clipboard",
-  //   });
-  // };
+    message({
+      type: MessageType.Success,
+      text: "Link copied to clipboard",
+    });
+  };
 
   const [_searchParams, setSearchParams] = useSearchParams();
 
@@ -1088,7 +1105,7 @@ export function SelectedType({
       )}
       <div className="SelectedTypeInner">
         <div className="SelectedTypeLineNumbers">
-          {/* {new Array(propertiesToRender.length + 2).fill(0).map((_, i, arr) => {
+          {new Array(propertiesToRender.length + 2).fill(0).map((_, i, arr) => {
             const line = i + 1;
             const isFirstSelected = Math.min(...selectedLineNumbers!) === line;
 
@@ -1099,24 +1116,26 @@ export function SelectedType({
                   Selected: selectedLineNumbers?.includes(line),
                 })}
                 onMouseDown={(e) => onMouseDown(e, line)}
-                style={
-                  {
-                    "--max-chars": Math.max(
-                      ...arr.map((_, i) => {
-                        return (i + 1).toString().length;
-                      })
-                    ),
-                  } as React.CSSProperties
-                }
+                // style={
+                //   {
+                //     "--max-chars": Math.max(
+                //       ...arr.map((_, i) => {
+                //         return (i + 1).toString().length;
+                //       })
+                //     ),
+                //   } as React.CSSProperties
+                // }
               >
-                {line === 1 && !!type.description && (
-                  <span>{type.description}</span>
+                {!!propertiesToRender[i - 1]?.description && (
+                  <span>
+                    """
+                    <br />
+                    {propertiesToRender[i - 1]?.description}
+                    <br />
+                    """
+                  </span>
                 )}
-                {!!propertiesToRender[line - 2] &&
-                  !!propertiesToRender[line - 2].description && (
-                    <span>{propertiesToRender[line - 2].description}</span>
-                  )}
-                <div>{line}</div>
+                <div style={{ height: 24 }} />
                 {isFirstSelected && (
                   <Tooltip
                     parentClassName="SelectedTypeLineNumberShare"
@@ -1137,7 +1156,7 @@ export function SelectedType({
                 )}
               </div>
             );
-          })} */}
+          })}
         </div>
         <div className="SelectedTypeProps">
           {type.description && (
@@ -1259,7 +1278,7 @@ export function SelectedType({
                     compact === true
                       ? false
                       : type.type === ISchemaPropsItemType.Types,
-                    // selectedLineNumbers,
+                    selectedLineNumbers,
                     navigationMode,
                     setSearchParams
                   )
@@ -1347,32 +1366,6 @@ function renderSearchResults(
         return isNameMatch || isTypeMatch || isArgsMatch || isTagsMatch;
       })
   );
-
-  if (!itemsToRender.length) {
-    return (
-      <div className="SelectedType">
-        <div className="SearchResult">
-          <div className="SearchResultNoResults">
-            <img
-              src={
-                theme === "dark"
-                  ? "/assets/images/EmptyState_dark.svg"
-                  : "/assets/images/EmptyState.svg"
-              }
-              width={320}
-              alt=""
-            />
-            <div className="SearchResultNoResultsText">
-              <div className="SearchResultNoResultsTitle">Nothing to show</div>
-              <div className="SearchResultNoResultsDescription">
-                Try to change the filters to get more information.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return itemsToRender.map((item) => {
     return (
@@ -1490,17 +1483,17 @@ function Schema(props: ISchemaProps) {
     [renderedSearchResultsCache, searchValue, activeService, theme]
   );
 
-  // const [selectedLineNumbers, setSelectedLineNumbers] = useState<number[]>(
-  //   getQueryParamByName("selectedLines")?.split(",").map(Number) ?? []
-  // );
+  const [selectedLineNumbers, setSelectedLineNumbers] = useState<number[]>(
+    getQueryParamByName("selectedLines")?.split(",").map(Number) ?? []
+  );
 
-  // useEffect(() => {
-  //   updateQueryParamByName(
-  //     "selectedLines",
-  //     selectedLineNumbers.join(","),
-  //     "replace"
-  //   );
-  // }, [selectedLineNumbers]);
+  useEffect(() => {
+    updateQueryParamByName(
+      "selectedLines",
+      selectedLineNumbers.join(","),
+      "replace"
+    );
+  }, [selectedLineNumbers]);
 
   const basePath = props.basePath || `/${serviceToPath(activeService)}/schema`;
 
@@ -1517,8 +1510,8 @@ function Schema(props: ISchemaProps) {
             }}
             activeService={activeService}
             onServiceClick={onServiceClick}
-            // selectedLineNumbers={selectedLineNumbers}
-            // onLineNumberSelectionChange={setSelectedLineNumbers}
+            selectedLineNumbers={selectedLineNumbers}
+            onLineNumberSelectionChange={setSelectedLineNumbers}
             filter={props.filter}
             compact={props.compact}
             navigationMode="router"
@@ -1526,9 +1519,12 @@ function Schema(props: ISchemaProps) {
         }
       />
     ));
-  }, [props.data, activeService, /*selectedLineNumbers,*/ props.compact]);
+  }, [props.data, activeService, selectedLineNumbers, props.compact]);
 
   const navigationItems = useMemo(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete("selectedLines");
+
     return props.data
       ?.filter((item) => {
         if (filter === ISchemaPropsItemType.All) {
@@ -1542,9 +1538,16 @@ function Schema(props: ISchemaProps) {
         path:
           props.navigationMode === "query"
             ? item.name
-            : `${basePath}/${item.name}`,
+            : `${basePath}/${item.name}` + "?" + searchParams.toString(),
       }));
-  }, [props.data, activeService, filter, basePath, props.navigationMode]);
+  }, [
+    props.data,
+    activeService,
+    filter,
+    basePath,
+    props.navigationMode,
+    location,
+  ]);
 
   const getNavigationCount = useCallback(
     (type: ISchemaPropsItemType = ISchemaPropsItemType.All) => {

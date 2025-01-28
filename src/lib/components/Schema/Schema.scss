@@ -423,7 +423,7 @@
     background-color: var(--color-background-primary);
     border: 1px solid var(--color-divider-primary);
     border-radius: 4px;
-    
+
     .SelectedTypeInner {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -442,7 +442,7 @@
       flex-direction: column;
       align-items: stretch;
       user-select: none;
-      width: 100%;
+      width: 0;
 
       .SelectedTypeLineNumber {
         position: relative;
@@ -452,7 +452,7 @@
         align-items: center;
         justify-content: flex-end;
         min-height: 28px;
-        max-width: calc(var(--max-chars) * var(--font-size-regular) + (var(--gutter-regular) + var(--gutter-medium)));
+        // max-width: calc(var(--max-chars) * var(--font-size-regular) + (var(--gutter-regular) + var(--gutter-medium)));
         padding-bottom: 4px;
         overflow: hidden;
         margin-left: calc(var(--gutter-medium) * -1);
@@ -467,22 +467,23 @@
 
         .SelectedTypeLineNumberShare {
           position: absolute;
-          left: 0;
-          top: 50%;
-          transform: translateY(calc(-50% - 2px)) translateX(6px);
+          left: 12px;
+          top: 0;
+          width: 24px;
         }
 
         span {
           opacity: 0;
-          width: 600px;
+          white-space: pre-wrap;
           margin-bottom: 4px;
+          width: 9999999px;
         }
 
-        div {
+        &>div {
           display: flex;
           align-items: center;
           justify-content: flex-end;
-          width: 100%;
+          width: 0;
           min-height: 24px;
           height: 24px;
         }
@@ -529,7 +530,7 @@
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
-    width: 600px;
+    white-space: pre-wrap;
 
     &:not(:last-of-type) {
       margin-bottom: 4px;
@@ -552,7 +553,7 @@
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
-    width: 600px;
+    white-space: pre-wrap;
     padding-left: 16px;
 
     &:not(:last-of-type) {
@@ -680,7 +681,7 @@
             }
           }
         }
-        
+
         &:last-child {
           .SelectedTypePropertyArgsItemComma {
             display: none;
