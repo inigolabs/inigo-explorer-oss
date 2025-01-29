@@ -1107,7 +1107,9 @@ export function SelectedType({
         <div className="SelectedTypeLineNumbers">
           {new Array(propertiesToRender.length + 2).fill(0).map((_, i, arr) => {
             const line = i + 1;
-            const isFirstSelected = Math.min(...selectedLineNumbers!) === line;
+            const isFirstSelected = selectedLineNumbers
+              ? Math.min(...selectedLineNumbers) === line
+              : false;
 
             return (
               <div
