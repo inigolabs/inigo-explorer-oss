@@ -13,7 +13,7 @@
 
 .TabViewContainer .Navigation {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   display: flex;
   gap: var(--tabview-navigation-gap, 16px);
   overflow: hidden;
@@ -25,11 +25,14 @@
 }
 
 .TabViewContainer .Navigation::after {
-  content: '';
+  content: "";
   z-index: -1;
   position: absolute;
   bottom: 0px;
-  width: calc(100% - var(--tabview-navigation-padding-left, 0px) - var(--tabview-navigation-padding-right, 0px));
+  width: calc(
+    100% - var(--tabview-navigation-padding-left, 0px) -
+      var(--tabview-navigation-padding-right, 0px)
+  );
   height: 1px;
   background-color: var(--color-divider-primary);
 }
@@ -52,9 +55,7 @@
   line-height: var(--tabview-line-height, 24px);
   padding-bottom: var(--tabview-padding-bottom, 4px);
   border-bottom: 2px solid transparent;
-  transition:
-    color var(--transition),
-    border-color var(--transition);
+  transition: color var(--transition), border-color var(--transition);
 }
 
 .TabViewContainer .Navigation .Button:disabled {
@@ -121,7 +122,7 @@
 }
 
 .TabViewContainer .Actions::before {
-  content: '';
+  content: "";
   height: 22px;
   border-left: 1px solid var(--color-divider-primary);
   margin-right: var(--gutter-regular);
