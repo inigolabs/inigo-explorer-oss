@@ -142,7 +142,7 @@ function Menu(props: IMenuProps) {
               type="link"
               onClick={(ev) => {
                 ev.currentTarget.blur();
-                setValue(undefined);
+                setValue(props.value as [string, string]);
                 setKey((prev) => prev + 1);
               }}
             />

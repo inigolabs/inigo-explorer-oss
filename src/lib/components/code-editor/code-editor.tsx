@@ -621,43 +621,7 @@ const CodeEditor: React.ForwardRefRenderFunction<
       }}
     >
       {props.label && <div className={styles.label}>{props.label}</div>}
-      <div className={styles.wrapper} ref={wrapperRef}>
-        {/* <Editor
-          height="100%"
-          theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
-          defaultLanguage={props.defaultLanguage ?? 'graphql'}
-          defaultValue={
-            typeof props.defaultValue === 'string' ? props.defaultValue : JSON.stringify(props.defaultValue, null, 2)
-          }
-          onChange={onEditorChange}
-          onMount={onEditorDidMount}
-          options={{
-            fontFamily: 'Roboto Mono',
-            fontSize: 12,
-            fontWeight: '500',
-            lineHeight: 26,
-            // tabIndex: 2,
-            // tabSize: 4,
-            minimap: {
-              enabled: false,
-            },
-            // lineNumbers: 'off',
-            // selectOnLineNumbers: false,
-            // glyphMargin: false,
-            // folding: false,
-            // lineDecorationsWidth: 0,
-            // contextmenu: false,
-            tabSize: 2,
-            readOnly: props.readOnly,
-            autoDetectHighContrast: false,
-            // padding: {top: 24, bottom: 24},
-            scrollbar: {
-              alwaysConsumeMouseWheel: false,
-            },
-          }}
-          beforeMount={handleEditorWillMount}
-        /> */}
-      </div>
+      <div className={styles.wrapper} ref={wrapperRef}></div>
     </div>
   );
 };
