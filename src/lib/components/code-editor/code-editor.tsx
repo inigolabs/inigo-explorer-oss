@@ -525,24 +525,17 @@ const CodeEditor: React.ForwardRefRenderFunction<
           {
             introspectionJSON:
               props.graphQLSchema as unknown as IntrospectionQuery,
-            uri: "schema.graphql",
+            fileMatch: ["**/*.graphql"],
+            uri: "/schema.graphql",
           },
         ]);
       } else {
         apiRef.current = initializeMode({
-          diagnosticSettings: {
-            jsonDiagnosticSettings: {
-              validate: true,
-              schemaValidation: "error",
-              allowComments: true,
-              trailingCommas: "ignore",
-            },
-          },
           schemas: [
             {
               introspectionJSON:
                 props.graphQLSchema as unknown as IntrospectionQuery,
-              uri: "schema.graphql",
+              uri: "/schema.graphql",
             },
           ],
         });

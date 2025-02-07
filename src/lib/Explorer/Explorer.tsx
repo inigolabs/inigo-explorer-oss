@@ -2174,7 +2174,7 @@ export default function Explorer(props: ExplorerProps) {
           <TextInput name="name" label="Name" required />
           <Select name="collection" label="Collection" required>
             {sharedCollections.map((collection) => (
-              <SelectOption value={collection.id}>
+              <SelectOption key={collection.id} value={collection.id}>
                 {collection.name}
               </SelectOption>
             ))}

@@ -1632,6 +1632,7 @@ function ExplorerSidebarCollections(
           {!!props.collections.length &&
             props.collections.map((collection) => (
               <div
+                key={collection.id}
                 className={classNames(
                   styles.collection,
                   collapsedCollections.includes(collection.id) &&
@@ -1837,6 +1838,7 @@ function ExplorerSidebarCollections(
                         // .filter((operation) => operation.name)
                         .map((operation) => (
                           <div
+                            key={operation.name}
                             className={styles.query}
                             onClick={() =>
                               onCollectionOperationClick(collection, operation)
