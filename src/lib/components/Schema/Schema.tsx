@@ -467,7 +467,7 @@ const renderType = (
               isScalar(td.TypeName) && "Scalar"
             )}
             key={td.TypeName}
-            to={`/${activeServiceId}/schema/${td.TypeName}${window.location.search}`}
+            to={`/${activeServiceId}/schema/schema/${td.TypeName}${window.location.search}`}
             onClick={onClick}
           >
             {renderStringWithSearch(td.TypeName, searchValue)}
@@ -816,7 +816,7 @@ const ReferencesListItem = ({
       return (
         <Link
           className="SelectedTypeReferencesListItemName"
-          to={`/${serviceToPath(activeService)}/schema/${name}${
+          to={`/${serviceToPath(activeService)}/schema/schema/${name}${
             window.location.search
           }`}
         >
@@ -895,7 +895,7 @@ const ReferencesListItem = ({
             return (
               <Link
                 key={i}
-                to={`/${serviceToPath(activeService)}/schema/${name}${
+                to={`/${serviceToPath(activeService)}/schema/schema/${name}${
                   window.location.search
                 }`}
               >
@@ -1175,9 +1175,9 @@ export function SelectedType({
                     "Active",
                     type.type === ISchemaPropsItemType.Scalars && "Scalar"
                   )}
-                  to={`/${serviceToPath(activeService)}/schema/${type.name}${
-                    window.location.search
-                  }`}
+                  to={`/${serviceToPath(activeService)}/schema/schema/${
+                    type.name
+                  }${window.location.search}`}
                   onClick={onClick}
                 >
                   {type.type === ISchemaPropsItemType.Directives && "@"}
@@ -1497,7 +1497,8 @@ function Schema(props: ISchemaProps) {
     );
   }, [selectedLineNumbers]);
 
-  const basePath = props.basePath || `/${serviceToPath(activeService)}/schema`;
+  const basePath =
+    props.basePath || `/${serviceToPath(activeService)}/schema/schema/schema`;
 
   const routes = useMemo(() => {
     return props.data?.map((item) => (
@@ -1588,7 +1589,10 @@ function Schema(props: ISchemaProps) {
   } else {
     if (
       window.location.pathname ===
-        `/${serviceToFullPath(activeService, activeParentService)}/schema` &&
+        `/${serviceToFullPath(
+          activeService,
+          activeParentService
+        )}/schema/schema` &&
       props.data.length
     ) {
       return (
@@ -1597,7 +1601,7 @@ function Schema(props: ISchemaProps) {
           to={`/${serviceToFullPath(
             activeService,
             activeParentService
-          )}/schema/${props.data[0].name}${window.location.search}`}
+          )}/schema/schema/${props.data[0].name}${window.location.search}`}
         />
       );
     }
