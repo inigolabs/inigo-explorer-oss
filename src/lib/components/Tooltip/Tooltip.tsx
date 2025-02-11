@@ -103,6 +103,15 @@ function Tooltip(props: ITooltipProps) {
                 30;
             }
 
+            if (fixedPosition.left < 0) {
+              fixedPosition.left = 8;
+              arrowPositionLeft =
+                targetRect.left +
+                targetRect.width / 2 -
+                fixedPosition.left -
+                30;
+            }
+
             if (fixedPosition.left + popupRect.width > window.innerWidth - 20) {
               fixedPosition.left = window.innerWidth - 20 - popupRect.width;
               arrowPositionLeft =
