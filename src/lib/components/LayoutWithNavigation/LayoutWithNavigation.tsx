@@ -17,6 +17,7 @@ import Loader from "../Loader/Loader";
 import { debounce, get } from "lodash";
 import Empty from "../Empty/Empty";
 import Button, { ButtonVariant } from "../Buttons/Button";
+import Tooltip from "../Tooltip/Tooltip";
 
 export interface LayoutWithNavigationProps {
   className?: string;
@@ -79,6 +80,22 @@ function NavigationItem(props: {
       })
     : props.title;
 
+  const content =
+    typeof contentNode === "string" ? (
+      <Tooltip
+        text={contentNode}
+        truncated
+        style={{ width: "100%" }}
+        popupStyle={{
+          padding: "var(--gutter-extra-small) var(--gutter-small)",
+        }}
+      >
+        {renderStringWithSearch(contentNode, props.search)}
+      </Tooltip>
+    ) : (
+      contentNode
+    );
+
   if (props.mode === "query") {
     const isActive = searchParams.get("path") === props.path;
 
@@ -92,9 +109,7 @@ function NavigationItem(props: {
           });
         }}
       >
-        {typeof contentNode === "string"
-          ? renderStringWithSearch(contentNode, props.search)
-          : contentNode}
+        {content}
       </div>
     );
   }
@@ -110,9 +125,7 @@ function NavigationItem(props: {
         props.clearSearch?.(ev.currentTarget.getAttribute("href")!)
       }
     >
-      {typeof contentNode === "string"
-        ? renderStringWithSearch(contentNode, props.search)
-        : contentNode}
+      {content}
     </NavLink>
   );
 }
