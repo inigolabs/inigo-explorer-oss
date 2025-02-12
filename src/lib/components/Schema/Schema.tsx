@@ -1498,7 +1498,8 @@ function Schema(props: ISchemaProps) {
   }, [selectedLineNumbers]);
 
   const basePath =
-    props.basePath || `/${serviceToPath(activeService)}/schema/schema`;
+    props.basePath ||
+    `/${serviceToFullPath(activeService, activeParentService)}/schema/schema`;
 
   const routes = useMemo(() => {
     return props.data?.map((item) => (
