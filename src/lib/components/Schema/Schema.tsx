@@ -45,6 +45,7 @@ import {
 } from "../../utils/queryParams";
 import { message } from "../MessagesWrapper/MessagesWrapper.utils";
 import { MessageType } from "../MessagesWrapper/MessagesWrapper.types";
+import { isDirective } from "graphql";
 
 const toLowerCase = (str?: string) => lowerCase(str).replace(/\s/g, "");
 
@@ -62,6 +63,7 @@ interface ReferenceItem {
   count: number;
   properties: ISchemaPropsItemProperty[];
   isImplements?: boolean;
+  isTypeDirective?: boolean;
 }
 
 const findTypeReferences = (
@@ -111,6 +113,10 @@ const findTypeReferences = (
       }
     }
 
+    if (item.tags?.length) {
+      console.log(item.tags);
+    }
+
     if (item.implements?.includes(typeName)) {
       count += 1;
 
@@ -118,6 +124,17 @@ const findTypeReferences = (
         name: item.name,
         count: 1,
         isImplements: true,
+        properties: [],
+      });
+    }
+
+    if (item.tags?.some((t) => t.key === typeName)) {
+      count += 1;
+
+      result.push({
+        name: item.name,
+        count: 1,
+        isTypeDirective: true,
         properties: [],
       });
     }
@@ -775,6 +792,7 @@ const ReferencesListItem = ({
   typeName,
   model,
   isImplements,
+  isTypeDirective,
   activeService,
   navigationMode,
 }: ReferenceItem & {
@@ -787,10 +805,10 @@ const ReferencesListItem = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const onButtonClick = useCallback(() => {
-    if (!isImplements) {
+    if (!isImplements && !isTypeDirective) {
       setIsExpanded(!isExpanded);
     }
-  }, [isExpanded, isImplements]);
+  }, [isExpanded, isImplements, isTypeDirective]);
 
   const nameNode = useMemo(() => {
     if (isImplements) {
@@ -828,6 +846,40 @@ const ReferencesListItem = ({
       );
     }
 
+    if (isTypeDirective) {
+      if (navigationMode === "query") {
+        return (
+          <div
+            className="SelectedTypeReferencesListItemName"
+            onClick={() => {
+              setSearchParams({
+                path: name,
+              });
+            }}
+          >
+            {name}
+            <div className="SelectedTypeReferencesListItemImplements">
+              {renderStringWithSearch(typeName, typeName)}
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <Link
+          className="SelectedTypeReferencesListItemName"
+          to={`/${serviceToPath(activeService)}/schema/schema/${name}${
+            window.location.search
+          }`}
+        >
+          {name}
+          <div className="SelectedTypeReferencesListItemImplements">
+            {renderStringWithSearch(typeName, typeName)}
+          </div>
+        </Link>
+      );
+    }
+
     return (
       <div
         className="SelectedTypeReferencesListItemName"
@@ -841,7 +893,14 @@ const ReferencesListItem = ({
         <div className="SelectedTypeReferencesListItemNameCount">{count}</div>
       </div>
     );
-  }, [isImplements, name, onButtonClick, typeName, navigationMode]);
+  }, [
+    isImplements,
+    isTypeDirective,
+    name,
+    onButtonClick,
+    typeName,
+    navigationMode,
+  ]);
 
   return (
     <div
