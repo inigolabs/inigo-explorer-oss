@@ -109,6 +109,10 @@ export function IconCheck() {
   );
 }
 
+export function IconPartialCheck() {
+  return <rect x="2" y="7" width="12" height="2" rx="1" fill="currentColor" />;
+}
+
 export function IconCheckCircle() {
   return (
     <path

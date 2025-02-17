@@ -8,7 +8,7 @@ import {
 } from "react";
 import classNames from "classnames";
 import { CheckboxProps, CheckboxRef, CheckboxVariant } from "./Checkbox.types";
-import Icon, { IconCheck } from "../Icon/Icon";
+import Icon, { IconCheck, IconPartialCheck } from "../Icon/Icon";
 
 const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -62,6 +62,7 @@ const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
         styles[props.variant ?? CheckboxVariant.Default],
         props.disabled && styles.disabled,
         props.readOnly && styles.readOnly,
+        props.partial && styles.partial,
         props.className
       )}
       data-scalar={true}
@@ -81,6 +82,10 @@ const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
         {props.variant === CheckboxVariant.Switch ? (
           <div className={styles.switch}>
             <div className={styles.handle} />
+          </div>
+        ) : props.partial ? (
+          <div className={styles.overlay}>
+            <Icon size={16} icon={<IconPartialCheck />} />
           </div>
         ) : (
           <div className={styles.overlay}>

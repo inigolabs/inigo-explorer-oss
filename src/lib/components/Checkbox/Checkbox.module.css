@@ -83,6 +83,7 @@
   transition: opacity var(--transition);
 }
 
+.wrapper.partial .overlay,
 .checkbox input:checked + .overlay {
   opacity: 1;
 }
@@ -107,9 +108,7 @@
   background-color: var(--color-background-primary);
   border: 2px solid var(--color-text-disabled);
   border-radius: 16px;
-  transition:
-    transform var(--transition),
-    border-color var(--transition);
+  transition: transform var(--transition), border-color var(--transition);
 }
 
 .checkbox input:checked + .switch {
