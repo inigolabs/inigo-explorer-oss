@@ -21,6 +21,13 @@
       --text-input-background-color: var(--color-background-primary);
     }
 
+    .empty {
+      position: static;
+      background: none;
+      border: none;
+      text-align: center;
+    }
+
     .group {
       display: flex;
       flex-direction: column;

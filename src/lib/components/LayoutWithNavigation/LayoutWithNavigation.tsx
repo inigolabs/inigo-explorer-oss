@@ -445,11 +445,15 @@ export function LayoutWithNavigation(props: LayoutWithNavigationProps) {
               />
             )}
             {props.navigation.slot}
-            <Navigation
-              {...props.navigation}
-              search={search}
-              clearSearch={clearSearch}
-            />
+            {!props.loading && props.navigation.items.length === 0 ? (
+              <div className={styles.empty}>Nothing to show</div>
+            ) : (
+              <Navigation
+                {...props.navigation}
+                search={search}
+                clearSearch={clearSearch}
+              />
+            )}
             {props.loading && <Loader className={styles.loader} visible />}
           </div>
           <div className={styles.divider} />
